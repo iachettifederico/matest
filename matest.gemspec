@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Matest::VERSION
   spec.authors       = ["Federico Iachetti"]
   spec.email         = ["iachetti.federico@gmail.com"]
-  spec.summary       = %q{Tests argentinisimos.}
-  spec.description   = %q{Natural assertions test suites.}
+  spec.summary       = %q{Tests gasoleros (cheap tests).}
+  spec.description   = %q{Natural assertions test suite.}
   spec.homepage      = ""
   spec.license       = "MIT"
 
