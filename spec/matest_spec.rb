@@ -1,13 +1,20 @@
 require "spec_helper"
 
+def get_statuses(&block)
+  group = block.call.first
+  group.execute!
+  group.statuses
+end
 describe "scope" do
   it "can pass" do
-    res = scope do
-      spec do
-        true
+    statuses = get_statuses do
+      scope do
+        spec do
+          true
+        end
       end
     end
-    res.must_be_kind_of(Matest::SpecPassed)
+    statuses.first.must_be_kind_of(Matest::SpecPassed)
   end
 end
 
@@ -21,7 +28,6 @@ describe "spec" do
         res.must_be_kind_of(Matest::SpecPassed)
       end
     end
-
     it "forwards the block" do
       scope do
         res = spec do
@@ -126,34 +132,3 @@ describe "xspec" do
     end
   end
 end
-
-####
-#### spec do
-####   5 == 5
-#### end
-####
-#### spec do
-####   5 == 6
-#### end
-####
-#### spec do
-####   skip
-#### end
-####
-#### spec  do
-####   10
-#### end
-####
-####
-####
-####
-#### # >> .
-#### # >>
-#### # >> F
-#### # >>
-#### # >> S
-#### # >>
-#### # >> X
-#### # >>
-#### # >> {:message=>"The spec needs to return either true or false, but it returned 10", :block=>#<Proc:0x00000001f61408@-:17>}
-#
