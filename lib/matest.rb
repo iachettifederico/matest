@@ -3,9 +3,11 @@ require "matest/version"
 module Matest
   class Runner
     attr_reader :example_groups
+    attr_reader :info
 
     def initialize
       @example_groups = []
+      @info = {}
     end
 
     def <<(example_group)
@@ -18,7 +20,6 @@ module Matest
 
     def execute!
       statuses = []
-
       example_groups.each do |current_group|
         current_group.execute!
       end
@@ -27,9 +28,16 @@ module Matest
       puts
       puts "### Messages ###"
 
+      info[:num_specs] = { total: 0 }
       example_groups.each do |current_group|
         current_group.statuses.each do |status|
-          unless status.is_a? Matest::SpecPassed
+          info[:num_specs][:total] += 1
+
+          info[:num_specs][status.name] ||= 0
+          info[:num_specs][status.name] += 1
+          
+          if status.is_a?(Matest::SpecPassed)
+          else
             puts
             puts "[#{status.name}] #{status.description}"
             if status.is_a?(Matest::NotANaturalAssertion)
