@@ -183,5 +183,5 @@ module Matest
 end
 
 def scope(description=nil, &block)
-  (@RUNNER || Matest::Runner.new).example_groups << Matest::ExampleGroup.new(block)
+  Matest::Runner.runner << Matest::ExampleGroup.new(block)
 end
