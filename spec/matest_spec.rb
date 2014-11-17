@@ -102,10 +102,11 @@ describe "spec" do
   end
 
   it "exists only inside a scope" do
-    spec do
+    -> {
+      spec do
       true
-    end
-
+      end
+    }.must_raise(NoMethodError)
   end
 end
 
