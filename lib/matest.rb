@@ -16,23 +16,47 @@ module Matest
   class NotANaturalAssertion < SpecStatus; end
 
   class SkipMe; end
+
+  class ExampleGroup
+    attr_reader :scope_block
+
+    def initialize(scope_block)
+      @scope_block = scope_block
+    end
+
+    def run
+      instance_eval(&scope_block)
+    end
+
+    def spec(description=nil, &block)
+      current_block = block_given? ? block : -> { Matest::SkipMe.new }
+      status_class = case current_block.call
+                     when true
+                       Matest::SpecPassed
+                     when false
+                       Matest::SpecFailed
+                     when Matest::SkipMe
+                       Matest::SpecSkipped
+                     else
+                       Matest::NotANaturalAssertion
+                     end
+      status_class.new(block, description)
+    end
+
+    def xspec(description=nil, &block)
+      return Matest::SpecSkipped.new(block, description)
+    end
+
+    [:it, :spec, :test, :example].each do |m|
+      alias m :spec
+      alias :"x#{m}" :xspec
+    end
+  end
+
+
 end
 
-def spec(description=nil, &block)
-  res = block_given? ? block.call : Matest::SkipMe.new
-  status_class = case res
-                 when true
-                   Matest::SpecPassed
-                 when false
-                   Matest::SpecFailed
-                 when Matest::SkipMe
-                   Matest::SpecSkipped
-                 else
-                   Matest::NotANaturalAssertion
-                 end
-  status_class.new(block, description)
-end
 
-def xspec(description=nil, &block)
-  return Matest::SpecSkipped.new(block, description)
+def scope(&block)
+  Matest::ExampleGroup.new(block).run
 end
