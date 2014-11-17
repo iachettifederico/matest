@@ -8,18 +8,17 @@ $LOAD_PATH.unshift(File.expand_path('../lib', __dir__))
 require "pathname"
 require "matest"
 
-@RUNNER = Matest::Runner.new
-
+runner = Matest::Runner.runner
 ARGV.each do |file|
-  @RUNNER.load_file(Pathname(file).expand_path)
+  runner.load_file(Pathname(file).expand_path)
 end
 
-@RUNNER.execute!
+runner.execute!
 
 time_elapsed = Time.now - start_time
 
 puts
-info = @RUNNER.info
+info = runner.info
 
 def spec_detail(info)
   info[:num_specs].map { |name, num|

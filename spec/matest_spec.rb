@@ -101,6 +101,12 @@ describe "spec" do
     end
   end
 
+  it "exists only inside a scope" do
+    spec do
+      true
+    end
+
+  end
 end
 
 describe "xspec" do

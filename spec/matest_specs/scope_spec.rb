@@ -6,7 +6,7 @@ scope do
   spec "I shall fail" do
     false
   end
-  
+
   spec do
     @hola = 5
     @hola == 5
@@ -27,10 +27,11 @@ scope do
   spec "I raise" do
     raise IndexError
   end
-  
+
   spec "I skip"
-  
+
   xspec "I skip too" do
     false
   end
 end
+

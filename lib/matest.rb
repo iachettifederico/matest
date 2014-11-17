@@ -10,6 +10,10 @@ module Matest
       @info = {}
     end
 
+    def self.runner
+      @runner ||= new
+    end
+
     def <<(example_group)
       example_groups << example_group
     end
@@ -19,15 +23,16 @@ module Matest
     end
 
     def execute!
-      statuses = []
       example_groups.each do |current_group|
         current_group.execute!
       end
+      print_messages
+    end
 
-      puts
-      puts
-      puts "### Messages ###"
+    def print_messages
+      puts "\n\n### Messages ###"
 
+      statuses = []
       info[:num_specs] = { total: 0 }
       example_groups.each do |current_group|
         current_group.statuses.each do |status|
@@ -35,13 +40,12 @@ module Matest
 
           info[:num_specs][status.name] ||= 0
           info[:num_specs][status.name] += 1
-          
+
           if status.is_a?(Matest::SpecPassed)
           else
-            puts
-            puts "[#{status.name}] #{status.description}"
+            puts "\n[#{status.name}] #{status.description}"
             if status.is_a?(Matest::NotANaturalAssertion)
-              puts "RESULT >> #{status.result.inspect}"
+              puts "  # => #{status.result.inspect}"
             end
             if status.is_a?(Matest::ExceptionRaised)
               puts "EXCEPTION >> #{status.result}"
@@ -50,7 +54,7 @@ module Matest
               end
 
             end
-            puts "  #{status.location}"
+            puts "  #{status.location}:"
           end
         end
       end
@@ -156,6 +160,21 @@ module Matest
     [:it, :spec, :test, :example].each do |m|
       alias m :spec
       alias :"x#{m}" :xspec
+    end
+
+    def self.let(var_name, &block)
+      define_method(var_name) do
+        instance_variable_set(:"@#{var_name}", block.call)
+      end
+    end
+
+    def let(var_name, &block)
+      self.class.let(var_name, &block)
+    end
+
+    def let!(var_name, &block)
+      self.class.let(var_name, &block)
+      send(var_name)
     end
 
     def run_spec(spec, description)
