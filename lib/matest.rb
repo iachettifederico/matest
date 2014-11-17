@@ -17,8 +17,34 @@ module Matest
     end
 
     def execute!
+      statuses = []
+
       example_groups.each do |current_group|
         current_group.execute!
+      end
+
+      puts
+      puts
+      puts "### Messages ###"
+
+      example_groups.each do |current_group|
+        current_group.statuses.each do |status|
+          unless status.is_a? Matest::SpecPassed
+            puts
+            puts "[#{status.name}] #{status.description}"
+            if status.is_a?(Matest::NotANaturalAssertion)
+              puts "RESULT >> #{status.result.inspect}"
+            end
+            if status.is_a?(Matest::ExceptionRaised)
+              puts "EXCEPTION >> #{status.result}"
+              status.result.backtrace.each do |l|
+                puts "  #{l}"
+              end
+
+            end
+            puts "  #{status.location}"
+          end
+        end
       end
     end
   end
@@ -27,7 +53,7 @@ module Matest
     attr_reader :block
     attr_reader :description
     attr_reader :result
-    
+
     def initialize(block, result, description=nil)
       @block = block
       @result = result
@@ -103,31 +129,11 @@ module Matest
 
     def execute!
       instance_eval(&scope_block)
-      specs.each do |spec, desc|
+      specs.shuffle.each do |spec, desc|
         res = run_spec(spec, desc)
         print res
       end
 
-      puts
-      puts
-      puts "### Messages ###"
-      statuses.each do |status|
-        unless status.is_a? Matest::SpecPassed
-          puts
-          puts "[#{status.name}] #{status.description}"
-          if status.is_a?(Matest::NotANaturalAssertion)
-            puts "RESULT >> #{status.result.inspect}"
-          end
-          if status.is_a?(Matest::ExceptionRaised)
-            puts "EXCEPTION >> #{status.result}"
-            status.result.backtrace.each do |l|
-              puts "  #{l}"
-            end
-            
-          end
-          puts "  #{status.location}"
-        end
-      end
     end
 
     def spec(description=nil, &block)
@@ -161,7 +167,7 @@ module Matest
                rescue Exception => e
                  Matest::ExceptionRaised.new(spec, e, description)
                end
-      statuses << status
+      @statuses << status
       status
     end
 
@@ -170,6 +176,5 @@ end
 
 
 def scope(description=nil, &block)
-
-  Matest::ExampleGroup.new(block).execute!
+  RUNNER.example_groups << Matest::ExampleGroup.new(block)
 end
