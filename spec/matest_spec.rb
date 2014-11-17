@@ -2,22 +2,12 @@ require "spec_helper"
 
 describe "scope" do
   it "can pass" do
-    scope do
-      res = spec do
+    res = scope do
+      spec do
         true
       end
-      res.must_be_kind_of(Matest::SpecPassed)
     end
-  end
-
-  it "can fail" do
-    -> {
-      scope do
-        res = spec do
-          raise "AN EXCEPTION"
-        end
-      end
-    }.must_raise(RuntimeError)
+    res.must_be_kind_of(Matest::SpecPassed)
   end
 end
 
@@ -96,12 +86,14 @@ describe "spec" do
     end
   end
 
-  # it "allows raising an exception" do
-  #   res = spec do
-  #     raise RuntimeError
-  #   end
-  #   res.must_be_kind_of(Matest::ExceptionRaised)
-  # end
+  it "allows raising an exception" do
+    scope do
+      res = spec do
+        raise RuntimeError
+      end
+      res.must_be_kind_of(Matest::ExceptionRaised)
+    end
+  end
 
 end
 

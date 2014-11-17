@@ -14,6 +14,14 @@ module Matest
   class SpecFailed < SpecStatus; end
   class SpecSkipped < SpecStatus; end
   class NotANaturalAssertion < SpecStatus; end
+  
+  class ExceptionRaised < SpecStatus
+    attr_reader :exception
+    def initialize(block, description, exception)
+      super(block, description)
+      @exception = exception
+    end
+  end
 
   class SkipMe; end
 
@@ -30,17 +38,21 @@ module Matest
 
     def spec(description=nil, &block)
       current_block = block_given? ? block : -> { Matest::SkipMe.new }
-      status_class = case current_block.call
-                     when true
-                       Matest::SpecPassed
-                     when false
-                       Matest::SpecFailed
-                     when Matest::SkipMe
-                       Matest::SpecSkipped
-                     else
-                       Matest::NotANaturalAssertion
-                     end
-      status_class.new(block, description)
+      begin
+        status_class = case current_block.call
+                       when true
+                         Matest::SpecPassed
+                       when false
+                         Matest::SpecFailed
+                       when Matest::SkipMe
+                         Matest::SpecSkipped
+                       else
+                         Matest::NotANaturalAssertion
+                       end
+        status_class.new(block, description)
+      rescue Exception => e
+        Matest::ExceptionRaised.new(block, description, e)
+      end
     end
 
     def xspec(description=nil, &block)
