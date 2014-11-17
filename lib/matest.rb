@@ -157,7 +157,7 @@ module Matest
       spec(description)
     end
 
-    [:it, :spec, :test, :example].each do |m|
+    [:it, :test, :example].each do |m|
       alias m :spec
       alias :"x#{m}" :xspec
     end
@@ -203,4 +203,9 @@ end
 
 def scope(description=nil, &block)
   Matest::Runner.runner << Matest::ExampleGroup.new(block)
+end
+
+[:describe, :context, :group].each do |m|
+  alias m :spec
+  alias :"x#{m}" :xspec
 end
