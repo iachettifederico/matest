@@ -2,6 +2,12 @@
 
 Tests Gasoleros (Very cheap tests)
 
+## Disclaimer
+
+This gem is still in an experimental version. It currently has some scoping issues and it's not yet suited for production.
+
+But don't despair ... they will be fixed =)
+
 ## Description
 
 Matest is a very small testing library.
