@@ -1,7 +1,7 @@
 scope do
   let(:m1) { :m1 }
   let!(:m3) { :m3 }
-  
+
   let(:m4) { :m4 }
   let!(:m5) { :m5 }
 
@@ -32,6 +32,18 @@ scope do
 
     spec do
       m2 == :m2
+    end
+  end
+
+  scope do
+    @chau = 4
+    spec do
+      @hola = 5
+      @hola == 5
+    end
+
+    spec do
+      @chau == 4
     end
   end
 end

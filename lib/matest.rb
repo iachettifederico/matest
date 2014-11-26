@@ -33,7 +33,9 @@ module Matest
       puts "\n\n### Messages ###"
 
       statuses = []
+      info[:success] = true
       info[:num_specs] = { total: 0 }
+      
       example_groups.each do |current_group|
         current_group.statuses.each do |status|
           info[:num_specs][:total] += 1
@@ -43,11 +45,16 @@ module Matest
 
           if status.is_a?(Matest::SpecPassed)
           else
+            if status.is_a?(Matest::SpecFailed)
+              info[:success] = false
+            end
             puts "\n[#{status.name}] #{status.description}"
             if status.is_a?(Matest::NotANaturalAssertion)
+              info[:success] = false
               puts "  # => #{status.result.inspect}"
             end
             if status.is_a?(Matest::ExceptionRaised)
+              info[:success] = false
               puts "EXCEPTION >> #{status.result}"
               status.result.backtrace.each do |l|
                 puts "  #{l}"

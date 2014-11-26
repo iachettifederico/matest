@@ -37,3 +37,7 @@ puts good_bye_message
 
 time_elapsed = Time.now - start_time
 puts "Elapsed: #{time_elapsed} seconds."
+
+
+exit(1) unless info[:success]
+
