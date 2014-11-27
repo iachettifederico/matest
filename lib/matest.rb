@@ -1,13 +1,18 @@
 require "matest/version"
 require "matest/spec_status"
+require "matest/spec_printer"
+
+
 module Matest
   class Runner
     attr_reader :example_groups
     attr_reader :info
+    attr_reader :printer
 
-    def initialize
+    def initialize(printer: SpecPrinter.new)
       @example_groups = []
-      @info = {}
+      @info           = {}
+      @printer        = printer
     end
 
     def self.runner
@@ -26,45 +31,7 @@ module Matest
       example_groups.each do |current_group|
         current_group.execute!
       end
-      print_messages
-    end
-
-    def print_messages
-      puts "\n\n### Messages ###"
-
-      statuses = []
-      info[:success] = true
-      info[:num_specs] = { total: 0 }
-
-      example_groups.each do |current_group|
-        current_group.statuses.each do |status|
-          info[:num_specs][:total] += 1
-
-          info[:num_specs][status.name] ||= 0
-          info[:num_specs][status.name] += 1
-
-          if status.is_a?(Matest::SpecPassed)
-          else
-            if status.is_a?(Matest::SpecFailed)
-              info[:success] = false
-            end
-            puts "\n[#{status.name}] #{status.description}"
-            if status.is_a?(Matest::NotANaturalAssertion)
-              info[:success] = false
-              puts "  # => #{status.result.inspect}"
-            end
-            if status.is_a?(Matest::ExceptionRaised)
-              info[:success] = false
-              puts "EXCEPTION >> #{status.result}"
-              status.result.backtrace.each do |l|
-                puts "  #{l}"
-              end
-
-            end
-            puts "  #{status.location}:"
-          end
-        end
-      end
+      printer.print(self)
     end
   end
 
@@ -79,7 +46,7 @@ module Matest
       @description = description
       lets.each do |let|
         self.class.let(let.var_name, &let.block)
-      send(let.var_name) if let.and_call
+        send(let.var_name) if let.and_call
       end
     end
 
@@ -98,14 +65,14 @@ module Matest
     attr_reader :var_name
     attr_reader :block
     attr_reader :and_call
-    
+
     def initialize(var_name, block, and_call=false)
       @var_name = var_name
       @block = block
       @and_call = and_call
     end
   end
-  
+
   class ExampleGroup
     attr_reader :scope_block
     attr_reader :specs
@@ -176,7 +143,6 @@ module Matest
       @statuses << status
       status
     end
-
   end
 end
 
