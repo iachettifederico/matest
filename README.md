@@ -11,24 +11,8 @@ It doesn't use the usual assertion style (`assert(1, 1)`) nor the rspec style(`1
 It uses natural assertions.
 
 This means that:
-- A test will pass if it returns true
-- A test will fail if it returns false
-
-## Installation
-
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'matest'
-```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install matest
+- A test will pass if it returns `true`
+- A test will fail if it returns `false`
 
 ## Usage
 
@@ -61,7 +45,7 @@ scope do
 end
 ```
 
-If the return value of the `spec` block is `true`, the spec will pass and if it's false it will `fail`.
+If the return value of the `spec` block is `true`, the spec will pass and if it's `false` it will fail.
 
 If you return anithing else, you'll get a `NOT A NATURAL ASSERTION` status.
 
@@ -85,10 +69,10 @@ You can skip a test in two possible ways: You can declare a spec whithout a bloc
 
 ```ruby
 scope do
-  xspec "I'll be skipped" do
+  spec "I'll be skipped"
+  xspec "I'll be skipped too" do
     true
   end
-  spec "I'll be skipped too"
 end
 ```
 
@@ -98,11 +82,11 @@ You can skip the whole scope  by using `xscope` instead of `scope`.
 
 Take into account that `xscope` is a no-op so you won't be informed when you skip a scope.
 
-## Let and let!
+## `#let` and `#let!`
 
 Matest steals the `let` and `let!` features from `RSpec` and `Minitest`.
 
-With `let` you can declare a lazy variable valid on the current scope and all sub-scopes.
+With `let` you can declare a lazy variable valid on the current scope and all sub-scopes. `let!` has the same efect, but it won't be lazy (it wil be loaded when defined).
 
 Here are some examples of what you can do with them:
 
@@ -147,6 +131,28 @@ scope do
 end
 ```
 
+## Matchers
+
+Matest doesn't come with predefined matchers, it doesn't need them. In fact, the concept of a matcher is not required, because of the natural assertions nature of the library.
+
+But you can define helper methods to *assert* long, complex or repeated logic:
+
+```ruby
+def is_even?(val)
+  val % 2 == 0
+end
+
+scope do
+  spec do
+    is_even?(4)
+  end
+
+  spec do
+    ! is_even?(5)
+  end
+end
+```
+
 ## Aliases
 
 You may be used to other keywords provenient from different testing frameworks. Matest has a couple of alias that you may use indistinctly to fit your style.
@@ -160,6 +166,22 @@ You may be used to other keywords provenient from different testing frameworks. 
 - `it` (and `xit`)
 - `test` (and `xtest`)
 - `example` (and `xexample`)
+
+## Installation
+
+Add this line to your application's Gemfile:
+
+```ruby
+gem 'matest'
+```
+
+And then execute:
+
+    $ bundle
+
+Or install it yourself as:
+
+    $ gem install matest
 
 ## Contributing
 
