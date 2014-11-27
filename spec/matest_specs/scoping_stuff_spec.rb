@@ -8,7 +8,7 @@ scope do
   spec do
     m1 == :m1
   end
-
+  #
   spec do
     ! defined?(m2)
   end
@@ -24,6 +24,7 @@ scope do
   spec do
     !! defined?(@m5)
   end
+
   scope do
     let(:m2) { :m2 }
     spec do
@@ -34,16 +35,21 @@ scope do
       m2 == :m2
     end
   end
+end
 
-  scope do
-    @chau = 4
-    spec do
-      @hola = 5
-      @hola == 5
-    end
+scope do
+  @c = true
+  test do
+    @a = true
+    !defined?(@b)
+  end
 
-    spec do
-      @chau == 4
-    end
+  test do
+    @b = true
+    !defined?(@a)
+  end
+
+  test do
+    !defined?(@c)
   end
 end

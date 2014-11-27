@@ -1,7 +1,11 @@
 require "bundler/gem_tasks"
+
+task default: :matest
 task :matest do
-  files = Rake::FileList["./spec/matest_specs/**/*_spec.rb"]
-  puts "\nRuning tests for: #{ files }\n\n"
+  arg_files = ENV["FILES"] && ENV["FILES"].split(/[\s,]+/)
+  all_files = Rake::FileList["./spec/matest_specs/**/*_spec.rb"]
+  files = arg_files || all_files
+  puts "\nRuning tests for: #{ files.join(" ") }\n\n"
 
   system *["./bin/mt"].concat(files)
 end

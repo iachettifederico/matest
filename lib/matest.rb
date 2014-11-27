@@ -35,7 +35,7 @@ module Matest
       statuses = []
       info[:success] = true
       info[:num_specs] = { total: 0 }
-      
+
       example_groups.each do |current_group|
         current_group.statuses.each do |status|
           info[:num_specs][:total] += 1
@@ -68,32 +68,69 @@ module Matest
     end
   end
 
-
   class SkipMe; end
+
+  class Example
+    attr_reader :example_block
+    attr_reader :description
+
+    def initialize(example_block, description, lets)
+      @example_block = example_block
+      @description = description
+      lets.each do |let|
+        self.class.let(let.var_name, &let.block)
+      send(let.var_name) if let.and_call
+      end
+    end
+
+    def call
+      instance_eval(&example_block)
+    end
+
+    def self.let(var_name, &block)
+      define_method(var_name) do
+        instance_variable_set(:"@#{var_name}", block.call)
+      end
+    end
+  end
+
+  class Let
+    attr_reader :var_name
+    attr_reader :block
+    attr_reader :and_call
+    
+    def initialize(var_name, block, and_call=false)
+      @var_name = var_name
+      @block = block
+      @and_call = and_call
+    end
+  end
   
   class ExampleGroup
     attr_reader :scope_block
     attr_reader :specs
+    attr_reader :lets
     attr_reader :statuses
 
     def initialize(scope_block)
       @scope_block = scope_block
       @specs       = []
+      @lets        = []
       @statuses    = []
+    end
+
+    def spec(description=nil, &block)
+      current_example = block_given? ? block : -> { Matest::SkipMe.new }
+      specs << Example.new(current_example, description, lets)
     end
 
     def execute!
       instance_eval(&scope_block)
       specs.shuffle.each do |spec, desc|
-        res = run_spec(spec, desc)
+        res = run_spec(spec)
         print res
       end
 
-    end
-
-    def spec(description=nil, &block)
-      current_example = block_given? ? block : -> { Matest::SkipMe.new }
-      specs << [current_example, description]
     end
 
     def xspec(description=nil, &block)
@@ -111,16 +148,15 @@ module Matest
       end
     end
 
-    def let(var_name, &block)
-      self.class.let(var_name, &block)
+    def let(var_name, and_call=false, &block)
+      lets << Let.new(var_name, block, and_call=false)
     end
 
     def let!(var_name, &block)
-      self.class.let(var_name, &block)
-      send(var_name)
+      lets << Let.new(var_name, block, and_call=true)
     end
 
-    def run_spec(spec, description)
+    def run_spec(spec)
       status = begin
                  result = spec.call
                  status_class = case result
@@ -133,9 +169,9 @@ module Matest
                                 else
                                   Matest::NotANaturalAssertion
                                 end
-                 status_class.new(spec, result, description)
+                 status_class.new(spec.example_block, result, spec.description)
                rescue Exception => e
-                 Matest::ExceptionRaised.new(spec, e, description)
+                 Matest::ExceptionRaised.new(spec.example_block, e, spec.description)
                end
       @statuses << status
       status
