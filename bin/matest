@@ -5,12 +5,12 @@ start_time = Time.now
 
 $LOAD_PATH.unshift(File.expand_path('../lib', __dir__))
 
-require "pathname"
 require "matest"
+require "rake"
 
 runner = Matest::Runner.runner
-ARGV.each do |file|
-  runner.load_file(Pathname(file).expand_path)
+Rake::FileList[ARGV].each do |file|
+  runner.load_file(file)
 end
 
 runner.execute!
