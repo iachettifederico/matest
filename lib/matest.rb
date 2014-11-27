@@ -9,10 +9,10 @@ module Matest
     attr_reader :info
     attr_reader :printer
 
-    def initialize(printer: SpecPrinter.new)
+    def initialize(options={})
       @example_groups = []
       @info           = {}
-      @printer        = printer
+      @printer        = options[:printer] || SpecPrinter.new
     end
 
     def self.runner
@@ -50,7 +50,7 @@ module Matest
       @__description = description
       lets.each do |let|
         self.class.let(let.var_name, &let.block)
-        send(let.var_name) if let.and_call
+        send(let.var_name) if let.bang
       end
     end
 
@@ -72,12 +72,12 @@ module Matest
   class Let
     attr_reader :var_name
     attr_reader :block
-    attr_reader :and_call
+    attr_reader :bang
 
-    def initialize(var_name, block, and_call=false)
+    def initialize(var_name, block, bang=false)
       @var_name = var_name
       @block = block
-      @and_call = and_call
+      @bang = bang
     end
   end
 
@@ -123,12 +123,12 @@ module Matest
       end
     end
 
-    def let(var_name, and_call=false, &block)
-      lets << Let.new(var_name, block, and_call=false)
+    def let(var_name, bang=false, &block)
+      lets << Let.new(var_name, block, bang=false)
     end
 
     def let!(var_name, &block)
-      lets << Let.new(var_name, block, and_call=true)
+      lets << Let.new(var_name, block, bang=true)
     end
 
     def run_spec(spec)
