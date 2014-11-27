@@ -16,22 +16,22 @@ This means that:
 
 ## Usage
 
-To run Matest, you just need to execute the `mt` command, passing as arguments the desired test files.
+To run Matest, you just need to execute the `matest` command, passing as arguments the desired test files.
 
 ```bash
-$ mt spec/my_spec.rb
+$ matest spec/my_spec.rb
 ```
 
 You can also use wildcards.
 
 For example, to run all the specs in a directory:
 ```bash
-$ mt spec/*_spec.rb
+$ matest spec/*_spec.rb
 ```
 
 Or to run recursively
 ```bash
-$ mt spec/**/*_spec.rb
+$ matest spec/**/*_spec.rb
 ```
 
 ## Specs

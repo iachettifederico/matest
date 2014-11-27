@@ -7,5 +7,5 @@ task :matest do
   files = arg_files || all_files
   puts "\nRuning tests for: #{ files.join(" ") }\n\n"
 
-  system *["./bin/mt"].concat(files)
+  system *["./bin/matest"].concat(files)
 end
