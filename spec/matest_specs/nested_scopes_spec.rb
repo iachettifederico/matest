@@ -17,6 +17,7 @@ scope "A" do
         false
       end
     end
+
     spec "B.1" do
       false
     end
