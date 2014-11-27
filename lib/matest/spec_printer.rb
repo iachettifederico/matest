@@ -18,10 +18,14 @@ module Matest
 
           if status.is_a?(Matest::SpecPassed)
           else
+            puts "\n[#{status.name}] #{status.description}"
             if status.is_a?(Matest::SpecFailed)
               runner.info[:success] = false
+              puts "Variables: "
+              status.example.track.each do |var, val|
+                puts "  #{var}: #{val.inspect}"
+              end
             end
-            puts "\n[#{status.name}] #{status.description}"
             if status.is_a?(Matest::NotANaturalAssertion)
               runner.info[:success] = false
               puts "  # => #{status.result.inspect}"

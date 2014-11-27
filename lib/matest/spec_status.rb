@@ -1,17 +1,19 @@
 module Matest
   class SpecStatus
-    attr_reader :block
-    attr_reader :description
+    attr_reader :example
     attr_reader :result
 
-    def initialize(block, result, description=nil)
-      @block = block
+    def initialize(example, result, description=nil)
+      @example = example
       @result = result
-      @description = description
     end
 
     def location
-      "%s:%d" % block.source_location
+      "%s:%d" % example.example_block.source_location
+    end
+
+    def description
+      example.description
     end
   end
 

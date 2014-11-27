@@ -38,12 +38,16 @@ module Matest
   class SkipMe; end
 
   class Example
-    attr_reader :example_block
-    attr_reader :description
+    def example_block
+      @__example_block
+    end
+    def description
+      @__description
+    end
 
     def initialize(example_block, description, lets)
-      @example_block = example_block
-      @description = description
+      @__example_block = example_block
+      @__description = description
       lets.each do |let|
         self.class.let(let.var_name, &let.block)
         send(let.var_name) if let.and_call
@@ -58,6 +62,10 @@ module Matest
       define_method(var_name) do
         instance_variable_set(:"@#{var_name}", block.call)
       end
+    end
+
+    def track
+      instance_variables.reject {|i| i.to_s =~ /\A@__/}.map {|i| [i, instance_variable_get(i)] }
     end
   end
 
@@ -136,9 +144,9 @@ module Matest
                                 else
                                   Matest::NotANaturalAssertion
                                 end
-                 status_class.new(spec.example_block, result, spec.description)
+                 status_class.new(spec, result)
                rescue Exception => e
-                 Matest::ExceptionRaised.new(spec.example_block, e, spec.description)
+                 Matest::ExceptionRaised.new(spec, e, spec.description)
                end
       @statuses << status
       status
