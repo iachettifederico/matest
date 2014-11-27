@@ -131,6 +131,10 @@ scope do
 end
 ```
 
+## The output
+
+In case the test fails, the instance variables you define inside it as well as the ones defined by `let` and `let!` are tracked and you'll see their final values in the output.
+
 ## Matchers
 
 Matest doesn't come with predefined matchers, it doesn't need them. In fact, the concept of a matcher is not required, because of the natural assertions nature of the library.
