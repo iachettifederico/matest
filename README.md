@@ -171,6 +171,15 @@ You may be used to other keywords provenient from different testing frameworks. 
 - `test` (and `xtest`)
 - `example` (and `xexample`)
 
+## TODO ... or not TODO
+- Colorize output
+- Before and after callbacks
+- matest-given-ish
+- Allow seamless transition (separated gems)
+  * matest-assert (to move from TestUnit, Minitest::Unit, Cutest)
+  * matest-should (to move from RSpec
+  * matest-must (to move from Minitest::Spec)
+
 ## Installation
 
 Add this line to your application's Gemfile:
