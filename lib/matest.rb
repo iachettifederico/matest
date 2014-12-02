@@ -95,7 +95,7 @@ module Matest
     end
 
     def spec(description=nil, &block)
-      current_example = block_given? ? block : -> { Matest::SkipMe.new }
+      current_example = block_given? ? block : ->(*) { Matest::SkipMe.new }
       specs << Example.new(current_example, description, lets)
     end
 
