@@ -112,10 +112,15 @@ module Matest
       spec(description)
     end
 
-    [:it, :test, :example].each do |m|
-      alias :"#{m}" :spec
-      alias :"x#{m}" :xspec
-    end
+    alias :it :spec
+    alias :xit :xspec
+
+    alias :test :spec
+    alias :xtest :xspec
+
+    alias :example :spec
+    alias :xexample :xspec
+
 
     def self.let(var_name, &block)
       define_method(var_name) do
@@ -162,7 +167,11 @@ def xscope(description=nil, &block)
   # no-op
 end
 
-[:describe, :context, :group].each do |m|
-  alias :"#{m}" :scope
-  alias :"x#{m}" :xscope
-end
+alias :describe :scope
+alias :xdescribe :xscope
+
+alias :context :scope
+alias :xcontext :xscope
+
+alias :group :scope
+alias :xgroup :xscope
