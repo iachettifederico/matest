@@ -162,9 +162,9 @@ In case the test fails, you'll get an extensive explanation about why.
 To show a trivial example:
 
 ```ruby
-scope "hola" do
+scope do
   let(:three) { 3 }
-  spec "chau" do
+  spec "Printing Failing Specs" do
     one = 2
     two = 2
     @one_plus_two_plus_three = one + two + three
@@ -182,7 +182,7 @@ F
 
 ### Messages ###
 
-[FAILING] chau
+[FAILING] Printing Failing Specs
 Location:
   spec/matest_specs/printing_assertion_spec.rb:3:
 Assertion: 
