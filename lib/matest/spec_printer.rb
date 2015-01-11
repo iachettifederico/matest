@@ -64,7 +64,7 @@ module Matest
           if !status.is_a?(Matest::SpecPassed)
             puts "\n[#{status.name}] #{status.description}"
             puts "Location:\n  #{status.location}:"
-            
+
             if status.is_a?(Matest::SpecFailed)
               runner.info[:success] = false
               puts "Assertion: \n  #{status.example.example_block.assertion}"
@@ -102,10 +102,19 @@ module Matest
 
     def print_subexpression(code, status)
       result = Evaluator.new(status.example, status.example.example_block.block).eval_string(code)
-      puts <<-CODE
+      if result.class != Matest::EvalErr
+        puts <<-CODE
   "#{code}" =>
     #{result}
       CODE
+      else
+        puts <<-CODE
+  The assertion couldn't be explained.
+  The error message was: 
+    #{result}
+  Make sure you are not calling any local vaiables on your code assertion.
+      CODE
+      end
     end
   end
 end

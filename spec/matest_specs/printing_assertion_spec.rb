@@ -1,6 +1,6 @@
 scope "hola" do
   let(:three) { 3 }
-  spec "chau" do
+  xspec "chau" do
     one = 2
     two = 2
 
@@ -13,6 +13,12 @@ scope "hola" do
     @arr = %w[a b c d e]
 
     @arr.pop == "k"
+  end
+
+  spec  do
+    a = 4
+
+    a == 5
   end
 end
 
