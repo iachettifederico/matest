@@ -60,6 +60,29 @@ scope "a description" do
 end
 ```
 
+## Constraints
+
+A couple of constraints must b taken into account, and this is extremely important.
+
+### The assertion MUST return a boolean
+
+The assertion is the last statement of the block and it must return either true or false.
+This is important, because the assertion will be evaluated and it will provide the status o the test.
+
+### Assertion expression
+
+The assertion can be any expression that returns a boolean value, BUT IT CANNOT CONTAIN LOCAL VARIABLES.
+If the assertion contains a local variable and it fails, the code that explains it bit by bit will throw an error.
+
+### The assertion MUST be idempotent
+
+Once the code is run, the state of the block gets saved.
+If the test fails, the assertion will be re-run a couple of times.
+So if you are popping the last element of an array inside the assertion, each time it gets run, you'll be popping the next element on the chain.
+The reason for this is that Matest will show you the result of each part of the expression and for that, it needs to re-run each part.
+
+Removing this constraint is a high priority on my todo list. But I'm considering the threadoffs of doing it. I'll be happy to pair or discuss on this matter.
+
 ## Raising Errors
 
 If your test raises an error during the run, youll get an `ERROR` status and you'll see the backtrace.
@@ -134,7 +157,47 @@ end
 
 ## The output
 
-In case the test fails, the instance variables you define inside it as well as the ones defined by `let` and `let!` are tracked and you'll see their final values in the output.
+In case the test fails, you'll get an extensive explanation about why.
+
+To show a trivial example:
+
+```ruby
+scope "hola" do
+  let(:three) { 3 }
+  spec "chau" do
+    one = 2
+    two = 2
+    @one_plus_two_plus_three = one + two + three
+    @res = 3
+    
+    @one_plus_two_plus_three.to_i == @res
+  end
+end
+```
+
+It fails and the output will be
+
+```
+F
+
+### Messages ###
+
+[FAILING] chau
+Location:
+  spec/matest_specs/printing_assertion_spec.rb:3:
+Assertion: 
+  @one_plus_two_plus_three.to_i == @res
+Variables: 
+  @one_plus_two_plus_three: 7
+  @res: 3
+Lets: 
+  three: 3
+Explanation:
+  "@one_plus_two_plus_three.to_i == @res" =>
+    false
+  "@one_plus_two_plus_three.to_i" =>
+    7
+```
 
 ## Matchers
 

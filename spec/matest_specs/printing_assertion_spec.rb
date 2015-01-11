@@ -1,4 +1,3 @@
-require "ostruct"
 scope "hola" do
   let(:three) { 3 }
   spec "chau" do
