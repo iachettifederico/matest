@@ -22,7 +22,7 @@ module Matest
     end
 
     def print_messages(runner)
-      puts yellow("\n\n### Messages ###")
+      puts bright_blue("\n\n### Messages ###")
 
       statuses = []
       runner.info[:success] = true
@@ -112,14 +112,14 @@ module Matest
     private
 
     def header(str)
-      bright_yellow(str + ":")
+      blue(str + ":")
     end
 
     def colors
       {
         Matest::SpecPassed           => :green,
         Matest::SpecFailed           => :red,
-        Matest::SpecSkipped          => :bright_black,
+        Matest::SpecSkipped          => :yellow,
         Matest::NotANaturalAssertion => :cyan,
         Matest::ExceptionRaised      => :red,
       }
