@@ -15,6 +15,7 @@ module Matest
     end
 
     def <<(example_group)
+      example_group.printer = printer
       example_groups << example_group
     end
 
@@ -26,7 +27,7 @@ module Matest
       example_groups.each do |current_group|
         current_group.execute!
       end
-      printer.print(self)
+      printer.print_messages(self)
     end
   end
 

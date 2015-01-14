@@ -5,6 +5,8 @@ module Matest
     attr_reader :lets
     attr_reader :statuses
 
+    attr_accessor :printer
+    
     def initialize(scope_block)
       @scope_block = scope_block
       @specs       = []
@@ -21,7 +23,7 @@ module Matest
       instance_eval(&scope_block)
       specs.shuffle.each do |spec, desc|
         res = run_spec(spec)
-        print res
+        printer.print(res)
       end
 
     end

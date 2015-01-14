@@ -1,53 +1,12 @@
+require "matest/evaluator"
+
 module Matest
-  class EvalErr
-    def initialize(str)
-      @string = str
-    end
-    def size
-      inspect.size
-    end
-    def to_s
-      @string
-    end
-    def inspect
-      @string
-    end
-  end
-
-  class Evaluator
-    def initialize(example, block)
-      # @example = Marshal.load( Marshal.dump(example) )
-      @example = example
-      @block = block
-    end
-
-    def eval_string(exp_string)
-      limit_length(eval_in_context(exp_string).inspect)
-    rescue StandardError => ex
-      EvalErr.new("#{ex.class}: #{ex.message}")
-    end
-
-    private
-
-    MAX_INSPECT_SIZE = 2000
-
-    def limit_length(string)
-      if string.size > MAX_INSPECT_SIZE
-        string[0..MAX_INSPECT_SIZE] + " (...truncated...)"
-      else
-        string
-      end
-    end
-
-    def eval_in_context(exp_string)
-      exp_proc = "proc { #{exp_string} }"
-      blk = eval(exp_proc, @block.binding)
-      @example.instance_eval(&blk)
-    end
-  end
-
   class SpecPrinter
-    def print(runner)
+    def print(res)
+      super res
+    end
+    
+    def print_messages(runner)
       puts "\n\n### Messages ###"
 
       statuses = []
@@ -86,6 +45,11 @@ module Matest
             if status.is_a?(Matest::NotANaturalAssertion)
               runner.info[:success] = false
               puts "  # => #{status.result.inspect}"
+              puts "Explanation:"
+              subexpressions = Sorcerer.subexpressions(status.example.example_block.assertion_sexp).reverse.uniq.reverse
+              subexpressions.each do |code|
+                print_subexpression(code, status)
+              end
             end
             if status.is_a?(Matest::ExceptionRaised)
               runner.info[:success] = false
@@ -101,16 +65,17 @@ module Matest
     end
 
     def print_subexpression(code, status)
-      result = Evaluator.new(status.example, status.example.example_block.block).eval_string(code)
+      just_before_assertion = status.example.just_before_assertion
+      result = Evaluator.new(just_before_assertion, just_before_assertion.before_assertion_block).eval_string(code)
       if result.class != Matest::EvalErr
         puts <<-CODE
-  "#{code}" =>
-    #{result}
+  #{code}
+    # => #{result}
       CODE
       else
         puts <<-CODE
   The assertion couldn't be explained.
-  The error message was: 
+  The error message was:
     #{result}
   Make sure you are not calling any local vaiables on your code assertion.
       CODE
