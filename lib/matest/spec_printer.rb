@@ -7,7 +7,7 @@ module Matest
 
     Term::ANSIColor.attributes.each do |attr|
       define_method(attr) do |str|
-        Matest::Configure.use_color? ? Term::ANSIColor.send(attr, str) : str
+        Matest::Configure.color? ? Term::ANSIColor.send(attr, str) : str
       end
     end
   end

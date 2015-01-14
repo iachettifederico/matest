@@ -7,12 +7,16 @@ module Matest
   module Configure
     module_function
 
-    def use_color?
-      @use_color ||= false
+    def color?
+      @color ||= false
     end
 
-    def use_color=(use_color)
-      @use_color = use_color
+    def color=(color)
+      @color = color
+    end
+
+    def use_color
+      @color = true
     end
   end
 end

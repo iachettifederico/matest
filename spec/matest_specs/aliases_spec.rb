@@ -1,5 +1,5 @@
 Matest.configure do |c|
-  c.use_color = true
+  c.use_color
 end
 
 scope do
