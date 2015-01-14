@@ -74,15 +74,6 @@ This is important, because the assertion will be evaluated and it will provide t
 The assertion can be any expression that returns a boolean value, BUT IT CANNOT CONTAIN LOCAL VARIABLES.
 If the assertion contains a local variable and it fails, the code that explains it bit by bit will throw an error.
 
-### The assertion MUST be idempotent
-
-Once the code is run, the state of the block gets saved.
-If the test fails, the assertion will be re-run a couple of times.
-So if you are popping the last element of an array inside the assertion, each time it gets run, you'll be popping the next element on the chain.
-The reason for this is that Matest will show you the result of each part of the expression and for that, it needs to re-run each part.
-
-Removing this constraint is a high priority on my todo list. But I'm considering the threadoffs of doing it. I'll be happy to pair or discuss on this matter.
-
 ## Raising Errors
 
 If your test raises an error during the run, youll get an `ERROR` status and you'll see the backtrace.
