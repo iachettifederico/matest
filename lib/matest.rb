@@ -1,5 +1,6 @@
 require "matest/version"
 
+require "matest/configure"
 require "matest/runner"
 require "matest/example_group"
 require "matest/example"

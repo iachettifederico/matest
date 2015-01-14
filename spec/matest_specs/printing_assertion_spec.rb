@@ -1,6 +1,6 @@
 scope do
   let(:three) { 3 }
-  spec "variables and lets" do
+  xspec "variables and lets" do
     one = 2
     two = 2
 
@@ -10,13 +10,13 @@ scope do
     @one_plus_two_plus_three.to_i == @res
   end
 
-  spec "again?" do
+  xspec "again?" do
     @arr = %w[a b c d e]
 
     @arr.pop == "k"
   end
 
-  spec "not natural" do
+  xspec "not natural" do
     one = 2
     two = 2
 
@@ -25,5 +25,4 @@ scope do
 
     @res = @one_plus_two_plus_three.to_i + @res.to_i
   end
-
 end

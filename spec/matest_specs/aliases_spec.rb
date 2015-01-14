@@ -1,3 +1,7 @@
+Matest.configure do |c|
+  c.use_color = true
+end
+
 scope do
   spec { true }
   xspec { false }
