@@ -3,7 +3,12 @@
 require "time"
 start_time = Time.now
 
-$LOAD_PATH.unshift(File.expand_path('../lib', __FILE__))
+if File.exist?(File.expand_path('../../spec', __FILE__))
+  $LOAD_PATH.unshift(File.expand_path('../../spec', __FILE__))
+end
+if File.exist?(File.expand_path('../../test', __FILE__))
+  $LOAD_PATH.unshift(File.expand_path('../../test', __FILE__))
+end
 
 require "matest"
 require "rake"
@@ -40,4 +45,3 @@ puts "Elapsed: #{time_elapsed} seconds."
 
 
 exit(1) unless info[:success]
-
