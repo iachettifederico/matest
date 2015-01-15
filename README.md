@@ -148,7 +148,7 @@ end
 
 ## The output
 
-In case the test fails, you'll get an extensive explanation about why.
+In case the test fails or is not a natural assertion, you'll get an extensive explanation about why.
 
 To show a trivial example:
 
@@ -227,13 +227,14 @@ You may be used to other keywords provenient from different testing frameworks. 
 - `example` (and `xexample`)
 
 ## TODO ... or not TODO
-- Colorize output
 - Before and after callbacks
 - matest-given-ish
 - Allow seamless transition (separated gems)
   * matest-assert (to move from TestUnit, Minitest::Unit, Cutest)
   * matest-should (to move from RSpec
   * matest-must (to move from Minitest::Spec)
+- Run "<file>:<line>"
+  Should run the enclosing test or scope
 
 ## Installation
 
@@ -250,6 +251,10 @@ And then execute:
 Or install it yourself as:
 
     $ gem install matest
+
+## Known Issues
+
+- If the test contains a here doc and it fails, it raises a Sorcerer error
 
 ## Contributing
 
