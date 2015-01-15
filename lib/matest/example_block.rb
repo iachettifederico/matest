@@ -29,22 +29,26 @@ class ExampleBlock
   private
 
   def generate_code
-    file = File.open(block.source_location.first)
-    source = file.read
-    lines = source.each_line.to_a
-
     lineno = block.source_location.last
 
     current_line = lineno-1
     valid_lines = [lines[current_line]]
 
-    valid_lines
-
     until Ripper::SexpBuilder.new(valid_lines.join("\n")).parse
       current_line += 1
       valid_lines << lines[current_line]
     end
-    code_array = valid_lines[1..-2]
-    code_array.join
+
+    valid_lines[1..-2].join
+  end
+
+  def lines
+    @lines ||= get_lines
+  end
+
+  def get_lines
+    file = File.open(block.source_location.first)
+    source = file.read
+    source.each_line.to_a
   end
 end
