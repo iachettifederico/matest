@@ -9,7 +9,7 @@ module Matest
     end
 
     def print_messages(runner)
-      puts bright_blue("\n\n### Messages ###")
+      puts "\n\n### Messages ###"
 
       statuses = []
       runner.info[:success] = true
@@ -30,17 +30,17 @@ module Matest
             if status.is_a?(Matest::SpecFailed)
               runner.info[:success] = false
               puts header("Assertion")
-              puts "  #{status.example.example_block.assertion}"
+              puts expression("  #{status.example.example_block.assertion}")
               if status.example.track_variables.any?
                 puts header("Variables")
                 status.example.track_variables.each do |var, val|
-                  puts "  #{var}: #{val.inspect}"
+                  puts key_value(var, val)
                 end
               end
               if status.example.track_lets.any?
                 puts header("Lets")
                 status.example.track_lets.each do |var, val|
-                  puts "  #{var}: #{val.inspect}"
+                  puts key_value(var, val)
                 end
               end
 
@@ -53,9 +53,9 @@ module Matest
             end
             if status.is_a?(Matest::ExceptionRaised)
               runner.info[:success] = false
-              puts bright_red("EXCEPTION >> #{status.result}")
+              puts error("EXCEPTION >> #{status.result}")
               status.result.backtrace.each do |l|
-                puts red("  #{l}")
+                puts error("  #{l}")
               end
 
             end
@@ -79,9 +79,9 @@ module Matest
       result = Evaluator.new(just_before_assertion, just_before_assertion.before_assertion_block).eval_string(code)
       if result.class != Matest::EvalErr
         explanation = []
-        explanation << yellow("  #{code}")
+        explanation << expression("  #{code}")
         explanation << "\n"
-        explanation << bright_blue("    # => #{result}")
+        explanation << value("    # => #{result}")
         puts explanation.join
         true
       else
@@ -91,7 +91,7 @@ module Matest
     #{result}
   Make sure you are not calling any local vaiables on your code assertion.
       CODE
-        puts red(code)
+        puts error(code)
         false
       end
     end
@@ -102,6 +102,22 @@ module Matest
       str + ":"
     end
 
+    def expression(str)
+      yellow(str)
+    end
+    
+    def value(str)
+      blue(str)
+    end
+
+    def key_value(key, value)
+      "  #{yellow(key.to_s)} #{bright_black("=>")} #{blue(value.inspect)}"
+    end
+
+    def error(str)
+      red(str)
+    end
+    
     def colors
       {
         Matest::SpecPassed           => :green,
