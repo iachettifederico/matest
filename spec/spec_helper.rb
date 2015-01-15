@@ -1,5 +1,4 @@
-# $LOAD_PATH.unshift(File.expand_path('../lib', __dir__))
+Matest.configure do |c|
+  c.use_color
+end
 
-# require "minitest/autorun"
-
-# require "matest"

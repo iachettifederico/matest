@@ -1,6 +1,4 @@
-Matest.configure do |c|
-  c.use_color
-end
+require "spec_helper"
 
 scope do
   spec { true }
