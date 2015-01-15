@@ -226,6 +226,28 @@ You may be used to other keywords provenient from different testing frameworks. 
 - `test` (and `xtest`)
 - `example` (and `xexample`)
 
+## Configuration
+
+You can add some configuration to the way the tests are run, by using the ```Matest.configure``` method.
+
+To use it, you need to pass a block with the configuration instructions inside.
+
+```ruby
+Matest.configure do |config|
+  config.use_color
+end
+```
+
+### Color
+
+You can tell Matest to use colored output by calling the ```use_color``` method on the config object
+
+```ruby
+Matest.configure do |config|
+  config.use_color
+end
+```
+
 ## TODO ... or not TODO
 - Before and after callbacks
 - matest-given-ish
