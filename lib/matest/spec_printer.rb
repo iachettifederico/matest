@@ -112,7 +112,7 @@ module Matest
     private
 
     def header(str)
-      blue(str + ":")
+      str + ":"
     end
 
     def colors
@@ -121,7 +121,7 @@ module Matest
         Matest::SpecFailed           => :red,
         Matest::SpecSkipped          => :yellow,
         Matest::NotANaturalAssertion => :cyan,
-        Matest::ExceptionRaised      => :red,
+        Matest::ExceptionRaised      => :magenta,
       }
     end
   end
