@@ -1,3 +1,5 @@
+require "spec_helper"
+
 scope do
   let(:a) { true }
   spec do

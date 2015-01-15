@@ -1,3 +1,5 @@
+require "spec_helper"
+
 scope "A" do
   spec "A.0" do
     false

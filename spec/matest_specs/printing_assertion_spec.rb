@@ -1,3 +1,5 @@
+require "spec_helper"
+
 scope do
   let(:three) { 3 }
   xspec "variables and lets" do

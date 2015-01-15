@@ -1,3 +1,5 @@
+require "spec_helper"
+
 scope do
   let(:m1) { :m1 }
   let!(:m3) { :m3 }

@@ -1,3 +1,5 @@
+require "spec_helper"
+
 scope do
   spec do
     1 == 1

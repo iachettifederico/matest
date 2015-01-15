@@ -1,3 +1,5 @@
+require "spec_helper"
+
 def is_even?(val)
   val % 2 == 0
 end
