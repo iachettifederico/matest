@@ -20,7 +20,7 @@ module Matest
     end
 
     def load_file(file)
-      load(file)
+      require(file)
     end
 
     def execute!

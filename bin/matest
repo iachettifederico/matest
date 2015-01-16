@@ -3,11 +3,12 @@
 require "time"
 start_time = Time.now
 
-if File.exist?(File.expand_path('../../spec', __FILE__))
-  $LOAD_PATH.unshift(File.expand_path('../../spec', __FILE__))
+if File.exist?(File.expand_path("./spec/", Dir.pwd))
+  $LOAD_PATH.unshift(File.expand_path("./spec/", Dir.pwd))
 end
-if File.exist?(File.expand_path('../../test', __FILE__))
-  $LOAD_PATH.unshift(File.expand_path('../../test', __FILE__))
+
+if File.exist?(File.expand_path("./test/", Dir.pwd))
+  $LOAD_PATH.unshift(File.expand_path("./test/", Dir.pwd))
 end
 
 require "matest"
