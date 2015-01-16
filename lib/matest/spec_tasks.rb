@@ -2,7 +2,7 @@ task :spec do
   arg_files = (ENV["FILES"] && ENV["FILES"].split(/[\s,]+/)) || [ENV["SPEC"]]
   if arg_files
     arg_files.map! { |file_name|
-      path = Pathname(file_name).expand_path
+      path = Pathname(file_name.to_s).expand_path
       raise "Spec file not found: #{file_name.inspect}" unless path.exist?
       path.directory? ? path.to_s + "/**/*.rb" : path.to_s
     }
