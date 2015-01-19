@@ -11,6 +11,7 @@ require "matest/skip_me"
 require "matest/spec_status"
 require "matest/spec_printer"
 require "matest/top_level_methods"
+require "matest/capture_exception"
 
 module Matest
 end
