@@ -17,7 +17,7 @@ require "rake"
 pwd = Dir.pwd
 runner = Matest::Runner.runner
 Rake::FileList[ARGV].each do |file|
-  runner.load_file(File.join(pwd,file))
+  runner.load_file(Pathname(file).expand_path.to_s)
 end
 
 runner.execute!
