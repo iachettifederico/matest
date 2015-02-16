@@ -14,9 +14,10 @@ end
 require "matest"
 require "rake"
 
+pwd = Dir.pwd
 runner = Matest::Runner.runner
 Rake::FileList[ARGV].each do |file|
-  runner.load_file(file)
+  runner.load_file(File.join(pwd,file))
 end
 
 runner.execute!
