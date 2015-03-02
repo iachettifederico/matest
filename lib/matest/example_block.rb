@@ -39,7 +39,13 @@ class ExampleBlock
       valid_lines << lines[current_line]
     end
 
-    valid_lines[1..-2].join
+    code = valid_lines[1..-2].join
+
+    return code unless code == ""
+
+    valid_lines = [lines[lineno-1]].join
+    code = Ripper::SexpBuilder.new(valid_lines).parse.last.last.last.last
+    Sorcerer.source(code)
   end
 
   def lines

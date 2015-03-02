@@ -1,6 +1,6 @@
 require "spec_helper"
 
-scope do
+xscope do
   let(:three) { 3 }
   xspec "variables and lets" do
     one = 2
@@ -27,4 +27,14 @@ scope do
 
     @res = @one_plus_two_plus_three.to_i + @res.to_i
   end
+end
+scope do
+  let(:parser) { OpenStruct.new(args: []) }
+  spec("AAAAAAAAAA") { parser.args == %w[first second] }
+  spec("BBBBBBBBBB") {
+    a = 5
+    parser.args == %w[first second]
+  }
+  spec("CCCCCCCCCC") { parser.args == %w[first second] }
+  spec { parser.args == %w[first second] }
 end

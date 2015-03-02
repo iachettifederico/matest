@@ -105,7 +105,7 @@ module Matest
     def expression(str)
       yellow(str)
     end
-    
+
     def value(str)
       blue(str)
     end
@@ -117,7 +117,7 @@ module Matest
     def error(str)
       red(str)
     end
-    
+
     def colors
       {
         Matest::SpecPassed           => :green,
