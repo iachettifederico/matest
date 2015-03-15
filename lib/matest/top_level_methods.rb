@@ -3,7 +3,7 @@ def scope(description=nil, &block)
 end
 
 def xscope(description=nil, &block)
-  # no-op
+  Matest::Runner.runner << Matest::SkippedExampleGroup.new(block)
 end
 
 alias :describe :scope
