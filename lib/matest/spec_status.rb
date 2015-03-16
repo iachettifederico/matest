@@ -15,6 +15,14 @@ module Matest
     def description
       example.description
     end
+
+    def name
+      self.class.name
+    end
+    
+    def self.to_s
+      name
+    end
   end
 
   class SpecPassed < SpecStatus
@@ -22,7 +30,7 @@ module Matest
       "."
     end
 
-    def name
+    def self.name
       "PASSING"
     end
   end
@@ -32,7 +40,7 @@ module Matest
       "F"
     end
 
-    def name
+    def self.name
       "FAILING"
     end
   end
@@ -42,7 +50,7 @@ module Matest
       "S"
     end
 
-    def name
+    def self.name
       "SKIPPED"
     end
   end
@@ -51,7 +59,7 @@ module Matest
       "N"
     end
 
-    def name
+    def self.name
       "NOT A NATURAL ASSERTION"
     end
   end
@@ -62,7 +70,7 @@ module Matest
       "E"
     end
 
-    def name
+    def self.name
       "ERROR"
     end
   end

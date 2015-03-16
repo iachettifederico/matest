@@ -19,8 +19,8 @@ module Matest
         current_group.statuses.each do |status|
           runner.info[:num_specs][:total] += 1
 
-          runner.info[:num_specs][status.name] ||= 0
-          runner.info[:num_specs][status.name] += 1
+          runner.info[:num_specs][status.class] ||= 0
+          runner.info[:num_specs][status.class] += 1
 
           if !status.is_a?(Matest::SpecPassed)
             puts send(colors[status.class], "\n[#{status.name}] #{status.description}")
@@ -64,9 +64,9 @@ module Matest
       puts nil, "-"*50, nil
       puts "Specs:"
 
-      #p runner.info
-      runner.info[:num_specs].each { |name, num|
-        puts "  #{num} #{name.downcase}."
+      p runner.info
+      runner.info[:num_specs].each { |klass, num|
+        puts send(colors[klass], "  #{num} #{klass.to_s.downcase}.")
       }
 
 
@@ -127,13 +127,19 @@ module Matest
     end
 
     def colors
-      {
-       Matest::SpecPassed           => :green,
-       Matest::SpecFailed           => :red,
-       Matest::SpecSkipped          => :yellow,
-       Matest::NotANaturalAssertion => :cyan,
-       Matest::ExceptionRaised      => :magenta,
-      }
+      @colors ||= get_colors
+    end
+
+    def get_colors
+      h = Hash.new(:white)
+
+      h[Matest::SpecPassed]            = :green
+      h[Matest::SpecFailed]            = :red
+      h[Matest::SpecSkipped]           = :yellow
+      h[Matest::NotANaturalAssertion]  = :cyan
+      h[Matest::ExceptionRaised]       = :magenta
+
+      h
     end
   end
 end
