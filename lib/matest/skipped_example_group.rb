@@ -16,7 +16,7 @@ module Matest
       instance_eval(&scope_block)
       specs.each do |spec|
         res = run_spec(spec)
-        printer.print(res)
+        printer.prints(res)
       end
     end
 

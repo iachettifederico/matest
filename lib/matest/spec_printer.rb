@@ -4,12 +4,12 @@ module Matest
   class SpecPrinter
     include Color
 
-    def print(res)
-      send(colors[res.class], res.to_s)
+    def prints(res)
+      print send(colors[res.class], res.to_s)
     end
 
     def print_messages(runner)
-      puts "\n\n### Messages ###"
+      puts header("\n\n### Messages ###")
 
       statuses = []
       runner.info[:success] = true
@@ -48,7 +48,7 @@ module Matest
             end
             if status.is_a?(Matest::NotANaturalAssertion)
               runner.info[:success] = false
-              puts "  # => #{status.result.inspect}"
+              puts "  # => #{status.result.inspect}", reset("")
               print_explanation_for(status)
             end
             if status.is_a?(Matest::ExceptionRaised)
@@ -57,11 +57,19 @@ module Matest
               status.result.backtrace.each do |l|
                 puts error("  #{l}")
               end
-
             end
           end
         end
       end
+      puts nil, "-"*50, nil
+      puts "Specs:"
+
+      #p runner.info
+      runner.info[:num_specs].each { |name, num|
+        puts "  #{num} #{name.downcase}."
+      }
+
+
     end
 
     def print_explanation_for(status)
@@ -99,7 +107,7 @@ module Matest
     private
 
     def header(str)
-      str + ":"
+      white(str + ":")
     end
 
     def expression(str)
@@ -111,7 +119,7 @@ module Matest
     end
 
     def key_value(key, value)
-      "  #{yellow(key.to_s)} #{bright_black("=>")} #{blue(value.inspect)}"
+      "  #{yellow(key.to_s)} #{bright_black("=>")} #{blue(value.inspect)}#{reset("")}"
     end
 
     def error(str)
@@ -120,11 +128,11 @@ module Matest
 
     def colors
       {
-        Matest::SpecPassed           => :green,
-        Matest::SpecFailed           => :red,
-        Matest::SpecSkipped          => :yellow,
-        Matest::NotANaturalAssertion => :cyan,
-        Matest::ExceptionRaised      => :magenta,
+       Matest::SpecPassed           => :green,
+       Matest::SpecFailed           => :red,
+       Matest::SpecSkipped          => :yellow,
+       Matest::NotANaturalAssertion => :cyan,
+       Matest::ExceptionRaised      => :magenta,
       }
     end
   end

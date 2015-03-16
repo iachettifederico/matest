@@ -25,3 +25,4 @@ scope "A" do
     end
   end
 end
+

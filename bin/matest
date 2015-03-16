@@ -24,26 +24,4 @@ runner.execute!
 
 time_elapsed = Time.now - start_time
 
-puts
-info = runner.info
-
-def spec_detail(info)
-  info[:num_specs].map { |name, num|
-    "  #{num} #{name.downcase}."
-  }.join("\n")
-end
-
-good_bye_message = <<-EOF
-------------------------------------------
-Specs:
-#{spec_detail(info)}
-
-EOF
-
-puts good_bye_message
-
-time_elapsed = Time.now - start_time
-puts "Elapsed: #{time_elapsed} seconds."
-
-
-exit(1) unless info[:success]
+exit(1) unless runner.info[:success]
