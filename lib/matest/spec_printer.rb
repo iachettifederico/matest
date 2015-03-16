@@ -5,7 +5,7 @@ module Matest
     include Color
 
     def print(res)
-      super send(colors[res.class], res.to_s)
+      send(colors[res.class], res.to_s)
     end
 
     def print_messages(runner)

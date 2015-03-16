@@ -46,7 +46,7 @@ module Matest
     alias :xgroup :xscope
 
     def spec(description=nil, &block)
-      current_example = ->(*args) { Matest::SkipMe.new }
+      current_example = Matest::SkipMe.new(caller)
       specs << Example.new(current_example, description, [])
     end
     alias :xspec :spec

@@ -15,8 +15,13 @@ module Matest
     end
 
     def spec(description=nil, &block)
-      current_example = block_given? ? block : ->(*args) { Matest::SkipMe.new }
+      current_example = block_given? ? block : Matest::SkipMe.new(caller)
       specs << Example.new(current_example, description, lets)
+    end
+
+    def xspec(description=nil, &block)
+      current_example = Matest::SkipMe.new(caller)
+      specs << Example.new(current_example, description, [])
     end
 
     def execute!
@@ -28,10 +33,6 @@ module Matest
 
     end
 
-    def xspec(description=nil, &block)
-      spec(description)
-    end
-
     alias :it :spec
     alias :xit :xspec
 
@@ -40,7 +41,6 @@ module Matest
 
     alias :example :spec
     alias :xexample :xspec
-
 
     def self.let(var_name, &block)
       define_method(var_name) do

@@ -11,7 +11,7 @@ class ExampleBlock
   def initialize(block)
     @block = block
 
-    @code = generate_code
+    @code =  generate_code
 
     @sexp = Ripper::SexpBuilder.new(code).parse.last
     @assertion_sexp = @sexp.last
@@ -46,6 +46,8 @@ class ExampleBlock
     valid_lines = [lines[lineno-1]].join
     code = Ripper::SexpBuilder.new(valid_lines).parse.last.last.last.last
     Sorcerer.source(code)
+  rescue Sorcerer::Resource::NotSexpError => e
+    "Matest::SkipMe.new"
   end
 
   def lines
