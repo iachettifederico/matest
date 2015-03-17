@@ -64,7 +64,6 @@ module Matest
       puts nil, "-"*50, nil
       puts "Specs:"
 
-      p runner.info
       runner.info[:num_specs].each { |klass, num|
         puts send(colors[klass], "  #{num} #{klass.to_s.downcase}.")
       }
