@@ -29,6 +29,23 @@ class ExampleBlock
   private
 
   def generate_code
+    code = Ripper::SexpBuilder.new(valid_lines).parse.last.last.last.last
+    Sorcerer.source(code)
+  rescue Sorcerer::Resource::NotSexpError => e
+    "Matest::SkipMe.new"
+  end
+
+  def lines
+    @lines ||= get_lines
+  end
+
+  def get_lines
+    file = File.open(block.source_location.first)
+    source = file.read
+    source.each_line.to_a
+  end
+
+  def valid_lines
     lineno = block.source_location.last
 
     current_line = lineno-1
@@ -44,19 +61,5 @@ class ExampleBlock
     return code unless code == ""
 
     valid_lines = [lines[lineno-1]].join
-    code = Ripper::SexpBuilder.new(valid_lines).parse.last.last.last.last
-    Sorcerer.source(code)
-  rescue Sorcerer::Resource::NotSexpError => e
-    "Matest::SkipMe.new"
-  end
-
-  def lines
-    @lines ||= get_lines
-  end
-
-  def get_lines
-    file = File.open(block.source_location.first)
-    source = file.read
-    source.each_line.to_a
   end
 end
