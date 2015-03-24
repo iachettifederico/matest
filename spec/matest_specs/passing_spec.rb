@@ -9,13 +9,9 @@ scope do
     true
   end
 
-  test do
-    true
-  end
+  test { true }
 
-  xtest do
-    5
-  end
+  xtest { true }
 
   xtest do
     true
