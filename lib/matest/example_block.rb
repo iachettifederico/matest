@@ -33,6 +33,13 @@ class ExampleBlock
     Sorcerer.source(code)
   rescue Sorcerer::Resource::NotSexpError => e
     "Matest::SkipMe.new"
+  rescue NoMethodError => e
+
+    if e.message == "undefined method `last' for :void_stmt:Symbol"
+      return "nil"
+    else
+      raise e
+    end
   end
 
   def lines
