@@ -20,7 +20,12 @@ module Matest
     end
 
     def load_file(file)
-      require(file)
+      location = file.split(":")
+      if location.count == 1
+        require(file)
+      else
+        require_spec(*location)
+      end
     end
 
     def execute!
@@ -28,6 +33,12 @@ module Matest
         current_group.execute!
       end
       printer.print_messages(self)
+    end
+
+    private
+
+    def require_spec(file, line)
+      require file
     end
   end
 
