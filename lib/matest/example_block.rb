@@ -12,7 +12,6 @@ class ExampleBlock
     @block = block
 
     @code =  generate_code
-
     @sexp = Ripper::SexpBuilder.new(code).parse.last
     @assertion_sexp = @sexp.last
     @assertion = Sorcerer.source(assertion_sexp)
@@ -27,9 +26,17 @@ class ExampleBlock
   end
 
   private
-
+  def parse_valid_lines
+    assertion_sexp = Ripper::SexpBuilder.new(valid_lines).parse.last.last
+    if assertion_sexp.first == :var_ref
+      assertion_sexp.last
+    else
+      assertion_sexp
+    end
+  end
+  
   def generate_code
-    code = Ripper::SexpBuilder.new(valid_lines).parse.last.last.last.last
+    code = parse_valid_lines
     Sorcerer.source(code)
   rescue Sorcerer::Resource::NotSexpError => e
     "Matest::SkipMe.new"
