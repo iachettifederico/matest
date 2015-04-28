@@ -1,0 +1,45 @@
+#+TITLE:     Specs for Matest
+#+AUTHOR:    Federico M. Iachetti
+#+EMAIL:     iachetti.federico@gmail.com
+#+LANGUAGE:  en
+#+OPTIONS:   H:5 num:t toc:nil \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:t ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+STYLE: 
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+
+* Natural assertions
+
+* Explanation
+** Instance variables
+** Lets
+** Subexpressions
+They must recognice
+- variables
+- instance vaiables
+- method calls
+
+* Scoping
+It should be able to scope:
+- instance variables
+- locally created classes or modules
+- lets
+
+* let, let!, before
+- let should be able to use other methods created via let
+
+** Order
+1. before all
+2. before each
+3. let!
+4. let
+
+
+* Block with separate assertion
+Similar to rspec-given, to allow to reuse a setup
+
+This will probably be solved with before each blocks y let! blocks
+
+* Notes
+** is a before block just a let! without argument?

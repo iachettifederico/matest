@@ -1,0 +1,24 @@
+#+TITLE:     Development rules
+#+AUTHOR:    Federico M. Iachetti
+#+EMAIL:     iachetti.federico@gmail.com
+#+LANGUAGE:  en
+#+OPTIONS:   H:5 num:t toc:nil \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:t ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+STYLE: 
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+
+* Sandi Metz Rules
+1) Classes/Modules/files can be no longer than one hundred lines of code.
+2) Methods can be no longer than five lines of code.
+3) Pass no more than four parameters into a method. Hash options are parameters.
+4) VER: Controllers can instantiate only one object. Therefore, views can only know about one instance variable and views should only send messages to that object
+
+* No if/case statements
+- if/unless
+- case
+- ternary if
+- `&&`, `||`
+
+* Test everything from the get go using Matest

@@ -1,0 +1,34 @@
+Federico Iachetti
+
+* Matest
+** Small testing framework
+** Natural assertions
+*** Non natural
+  - assert_equal(1, var)
+  - var.should == 1
+  - expect(var).to eql(1)
+*** Natural
+  - var == 1
+* Rules
+** Sandi Metz's
+  1. Classes/Modules/files can be no longer than one hundred lines of code.
+  2. Methods can be no longer than five lines of code.
+  3. Pass no more than four parameters into a method. Hash options are parameters.
+** From Sandi talks
+*** No if/case statements
+  - if/unless
+  - case
+  - ternary if
+  - `&&`, `||`
+** Test everything
+- Apply TDD
+- Start with RSpec, but move to Matest once it's usable again
+* After thoughts
+** I may take this topic again
+** Communicate with me if
+- there's anything you considered I've done wrong or I can improve
+- there's something I don't know how to do yet and you have an idea
+- you wanna char and/or pair with me
+** Channels
+Twitter: @fiachetti
+Email: iachetti.federico@gmail.com
