@@ -158,18 +158,86 @@ module Matest
   end
 
   class Status
-    class SpecPassed < Status; end
-    class SpecFailed < Status; end
-    class SpecSkipped < Status; end
-    class NotNaturalAssertion < Status; end
+    class SpecPassed < Status
+      def passing?
+        true
+      end
+      def skipped?
+        false
+      end
+      def short
+        ?.
+      end
+      def name
+        "Passing"
+      end
+    end
+    class SpecFailed < Status
+      def passing?
+        false
+      end
+      def skipped?
+        false
+      end
+      def short
+        ?F
+      end
+      def name
+        "Failed"
+      end
+    end
+    class SpecSkipped < Status
+      def passing?
+        false
+      end
+      def skipped?
+        true
+      end
+      def short
+        ?S
+      end
+      def name
+        "Skipped"
+      end
+    end
+    class NotNaturalAssertion < Status
+      def passing?
+        false
+      end
+      def skipped?
+        false
+      end
+      def short
+        ?N
+      end
+      def name
+        "Not Natural"
+      end
+    end
     class ExceptionRaised < Status
+      def passing?
+        false
+      end
+      def skipped?
+        false
+      end
       def to_s
         super + result.backtrace.inspect
+      end
+      def short
+        ?E
+      end
+      def name
+        "Exception Raised"
       end
     end
     class Skip < Exception
       def self.call
         self
+      end
+
+      def self.source_location
+        caller.last.split(":")[0..1]
       end
     end
     STATUSES = {
@@ -180,18 +248,18 @@ module Matest
     STATUSES.default = NotNaturalAssertion
 
     attr_reader :result
-    def initialize(result)
+    def initialize(result, block)
       @result = result
+      @block = block || Skip
     end
 
     def self.for(block=Skip)
-      # TODO: Cambiar raise por throw!
       res = begin
               (block || Skip).call
             rescue Skip
               Skip
             end
-      STATUSES[res].new(res)
+      STATUSES[res].new(res, block)
 
     rescue Exception => ex
       ExceptionRaised.new(ex)
@@ -201,16 +269,37 @@ module Matest
       "<#{self.class} result: #{result.inspect}>"
     end
 
+    def location
+      @block.source_location.join(":")
+    end
   end
 
   class SpecPrinter
+    STATUSES = []
     def <<(status)
-      puts status
+      print status.short
+      STATUSES << status unless status.passing?
     end
 
     def render
+      puts "\nMessages:\n\n\n"
+      STATUSES.each do |status|
+        variables = unless status.passing? || status.skipped?
+                      #status.spec
+                      "VARIABLES HERE"
+                    end
+
+        message = [
+                   "#{status.name}:",
+                   "  Result:    #{status.result}",
+                   "  Location:  #{status.location}",
+                   "  Variables: #{variables}",
+                  ].uniq
+        puts message.join("\n")
+      end
     end
   end
+
 end
 
 module Kernel
@@ -222,22 +311,8 @@ module Kernel
 end
 
 
-class ComplexPrinter
-  STATUSES = []
-  def <<(status)
-    puts status
-    STATUSES << status
-  end
 
-  def render
-    puts "\nMessages:\n\n\n"
-    STATUSES.each do |status|
-      puts "  -> #{status.result}"
-    end
-  end
-end
-
-Matest.runner printer: ComplexPrinter.new, selector: Matest::SelectorStrategies::Tag.new(:wip)
+Matest.runner #, selector: Matest::SelectorStrategies::Tag.new(:wip)
 
 scope {
   scope
@@ -264,13 +339,56 @@ scope {
   }
 }
 
+start = Time.now
 Matest.runner.run
+Time.now - start                # => 0.000216104
 
-# >> <Matest::Status::NotNaturalAssertion result: "Wip 4">
-# >> <Matest::Status::SpecSkipped result: Matest::Status::Skip>
-# >>
+
+# >> NSSNN.FNSSFN
 # >> Messages:
-# >>
-# >>
-# >>   -> Wip 4
-# >>   -> Matest::Status::Skip
+# >> 
+# >> 
+# >> Not Natural:
+# >>   Result:    WWIP 3
+# >>   Location:  -:325
+# >>   Variables: VARIABLES HERE
+# >> Skipped:
+# >>   Result:    Matest::Status::Skip
+# >>   Location:  -:343
+# >>   Variables: 
+# >> Skipped:
+# >>   Result:    Matest::Status::Skip
+# >>   Location:  -:320
+# >>   Variables: 
+# >> Not Natural:
+# >>   Result:    Wip 4
+# >>   Location:  -:330
+# >>   Variables: VARIABLES HERE
+# >> Not Natural:
+# >>   Result:    6
+# >>   Location:  -:334
+# >>   Variables: VARIABLES HERE
+# >> Failed:
+# >>   Result:    false
+# >>   Location:  -:337
+# >>   Variables: VARIABLES HERE
+# >> Not Natural:
+# >>   Result:    2
+# >>   Location:  -:323
+# >>   Variables: VARIABLES HERE
+# >> Skipped:
+# >>   Result:    Matest::Status::Skip
+# >>   Location:  -:343
+# >>   Variables: 
+# >> Skipped:
+# >>   Result:    Matest::Status::Skip
+# >>   Location:  -:343
+# >>   Variables: 
+# >> Failed:
+# >>   Result:    false
+# >>   Location:  -:331
+# >>   Variables: VARIABLES HERE
+# >> Not Natural:
+# >>   Result:    XXXXXXXXXXXXXXXXXXXX
+# >>   Location:  -:319
+# >>   Variables: VARIABLES HERE
