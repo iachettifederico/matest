@@ -93,19 +93,33 @@ module Matest
   end
 
   class Spec
-    attr_reader :block
-    attr_reader :tag
     def initialize(description=Undefined, tag: Undefined, **options, &block)
-      @description = description
-      @block = block
-      @spec_count = 0
-      @tag = tag
+      @_description = description
+      @_block = block
+      @_spec_count = 0
+      @_tag = tag
+    end
+
+    def description
+      @_description
+    end
+    def block
+      @_block
+    end
+    def spec_count
+      @_spec_count
+    end
+    def increment_spec_count
+      @_spec_count += 1
+    end
+    def tag
+      @_tag
     end
 
     def let(var_name)
       self.class.class_eval do
         define_method(var_name) do
-          instance_variable_set("@#{var_name}", yield)
+          instance_variable_set("@_#{var_name}__let", yield)
         end
       end
     end
@@ -134,13 +148,27 @@ module Matest
       raise Matest::Status::Skip
     end
 
+    def variables
+      instance_variables.select {|n| !n.to_s.start_with?("@_")}.
+        each_with_object({}) { |var, result|
+        result[var[1..-1]] = instance_variable_get(var)
+      }
+    end
+
+    def lets
+      instance_variables.select {|n| n.to_s.start_with?("@_") && n.to_s.end_with?("__let")}.
+        each_with_object({}) { |var, result|
+        result[var[2..-6]] = instance_variable_get(var)
+      }
+    end
+
     private
 
     def spec_class_name
       [
        self.class.to_s,
        "_",
-       @spec_count += 1
+       increment_spec_count
       ].join.split("::").last
     end
 
@@ -153,7 +181,7 @@ module Matest
     end
 
     def run
-      Matest.runner.printer << Status.for(spec.block)
+      Matest.runner.printer << Status.for(spec)
     end
   end
 
@@ -248,21 +276,22 @@ module Matest
     STATUSES.default = NotNaturalAssertion
 
     attr_reader :result
-    def initialize(result, block)
+    attr_reader :spec
+    def initialize(result, spec)
       @result = result
-      @block = block || Skip
+      @spec = spec
     end
 
-    def self.for(block=Skip)
+    def self.for(spec)
       res = begin
-              (block || Skip).call
+              spec.instance_eval(&(spec.block || Skip))
             rescue Skip
               Skip
             end
-      STATUSES[res].new(res, block)
+      STATUSES[res].new(res, spec)
 
     rescue Exception => ex
-      ExceptionRaised.new(ex)
+      ExceptionRaised.new(ex, spec)
     end
 
     def to_s
@@ -270,7 +299,15 @@ module Matest
     end
 
     def location
-      @block.source_location.join(":")
+      (spec.block || Skip).source_location.join(":")
+    end
+
+    def variables
+      spec.variables
+    end
+
+    def lets
+      spec.lets
     end
   end
 
@@ -284,19 +321,25 @@ module Matest
     def render
       puts "\nMessages:\n\n\n"
       STATUSES.each do |status|
-        variables = unless status.passing? || status.skipped?
-                      #status.spec
-                      "VARIABLES HERE"
-                    end
-
         message = [
                    "#{status.name}:",
                    "  Result:    #{status.result}",
                    "  Location:  #{status.location}",
-                   "  Variables: #{variables}",
+                   (format_vars("Variables", status.variables) unless status.skipped?),
+                   (format_vars("Lets", status.lets) unless status.skipped?),
                   ].uniq
         puts message.join("\n")
       end
+    end
+
+    private
+
+    def format_vars(title, vars)
+      return if vars.empty?
+      "  " + title + ":\n    " +
+        vars.map { |name, value|
+        "#{name}: #{value.inspect}" unless value == Matest::Undefined
+      }.uniq.join("\n    ")
     end
   end
 
@@ -312,11 +355,11 @@ end
 
 
 
-Matest.runner #, selector: Matest::SelectorStrategies::Tag.new(:wip)
+Matest.runner order: ->(c){c}#, selector: Matest::SelectorStrategies::Tag.new(:wip)
 
 scope {
-  scope
-  spec { "XXXXXXXXXXXXXXXXXXXX"}
+  let(:a) { 66 }
+  spec { @ba = 5; a }
   spec(tag: :wip) {
     skip
     "WIP 1" }
@@ -341,54 +384,44 @@ scope {
 
 start = Time.now
 Matest.runner.run
-Time.now - start                # => 0.000216104
+Time.now - start                # => 0.000409047
 
 
-# >> NSSNN.FNSSFN
+# >> NSNNNFNE.FE
 # >> Messages:
 # >> 
 # >> 
 # >> Not Natural:
-# >>   Result:    WWIP 3
-# >>   Location:  -:325
-# >>   Variables: VARIABLES HERE
+# >>   Result:    66
+# >>   Location:  -:362
+# >>   Variables:
+# >>     ba: 5
+# >>   Lets:
+# >>     a: 66
 # >> Skipped:
 # >>   Result:    Matest::Status::Skip
-# >>   Location:  -:343
-# >>   Variables: 
-# >> Skipped:
-# >>   Result:    Matest::Status::Skip
-# >>   Location:  -:320
-# >>   Variables: 
-# >> Not Natural:
-# >>   Result:    Wip 4
-# >>   Location:  -:330
-# >>   Variables: VARIABLES HERE
-# >> Not Natural:
-# >>   Result:    6
-# >>   Location:  -:334
-# >>   Variables: VARIABLES HERE
-# >> Failed:
-# >>   Result:    false
-# >>   Location:  -:337
-# >>   Variables: VARIABLES HERE
+# >>   Location:  -:363
 # >> Not Natural:
 # >>   Result:    2
-# >>   Location:  -:323
-# >>   Variables: VARIABLES HERE
-# >> Skipped:
-# >>   Result:    Matest::Status::Skip
-# >>   Location:  -:343
-# >>   Variables: 
-# >> Skipped:
-# >>   Result:    Matest::Status::Skip
-# >>   Location:  -:343
-# >>   Variables: 
+# >>   Location:  -:366
+# >> Not Natural:
+# >>   Result:    WWIP 3
+# >>   Location:  -:368
+# >> Not Natural:
+# >>   Result:    Wip 4
+# >>   Location:  -:373
 # >> Failed:
 # >>   Result:    false
-# >>   Location:  -:331
-# >>   Variables: VARIABLES HERE
+# >>   Location:  -:374
 # >> Not Natural:
-# >>   Result:    XXXXXXXXXXXXXXXXXXXX
-# >>   Location:  -:319
-# >>   Variables: VARIABLES HERE
+# >>   Result:    6
+# >>   Location:  -:377
+# >> Exception Raised:
+# >>   Result:    wrong argument type Class (expected Proc)
+# >>   Location:  -:386
+# >> Failed:
+# >>   Result:    false
+# >>   Location:  -:380
+# >> Exception Raised:
+# >>   Result:    wrong argument type Class (expected Proc)
+# >>   Location:  -:386
