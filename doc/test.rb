@@ -1,6 +1,3 @@
-require "simplecov"             # => true
-require "callable"              # => true
-
 module Matest
   module SelectorStrategies
     module All
@@ -384,7 +381,7 @@ scope {
 
 start = Time.now
 Matest.runner.run
-Time.now - start                # => 0.000409047
+Time.now - start                # => 0.00102659
 
 
 # >> NSNNNFNE.FE
@@ -393,35 +390,35 @@ Time.now - start                # => 0.000409047
 # >> 
 # >> Not Natural:
 # >>   Result:    66
-# >>   Location:  -:362
+# >>   Location:  -:359
 # >>   Variables:
 # >>     ba: 5
 # >>   Lets:
 # >>     a: 66
 # >> Skipped:
 # >>   Result:    Matest::Status::Skip
-# >>   Location:  -:363
+# >>   Location:  -:360
 # >> Not Natural:
 # >>   Result:    2
-# >>   Location:  -:366
+# >>   Location:  -:363
 # >> Not Natural:
 # >>   Result:    WWIP 3
-# >>   Location:  -:368
+# >>   Location:  -:365
 # >> Not Natural:
 # >>   Result:    Wip 4
-# >>   Location:  -:373
+# >>   Location:  -:370
 # >> Failed:
 # >>   Result:    false
-# >>   Location:  -:374
+# >>   Location:  -:371
 # >> Not Natural:
 # >>   Result:    6
+# >>   Location:  -:374
+# >> Exception Raised:
+# >>   Result:    wrong argument type Class (expected Proc)
+# >>   Location:  -:383
+# >> Failed:
+# >>   Result:    false
 # >>   Location:  -:377
 # >> Exception Raised:
 # >>   Result:    wrong argument type Class (expected Proc)
-# >>   Location:  -:386
-# >> Failed:
-# >>   Result:    false
-# >>   Location:  -:380
-# >> Exception Raised:
-# >>   Result:    wrong argument type Class (expected Proc)
-# >>   Location:  -:386
+# >>   Location:  -:383

@@ -1,1 +1,21 @@
 #!/usr/bin/env ruby
+
+require "time"
+start_time = Time.now
+
+if File.exist?(File.expand_path("./spec/", Dir.pwd))
+  $LOAD_PATH.unshift(File.expand_path("./spec/", Dir.pwd))
+end
+
+require "matest"
+require "rake"
+
+Rake::FileList[ARGV].each do |file|
+  require Pathname(file).expand_path.to_s
+end
+
+runner = Matest.runner.run
+
+time_elapsed = Time.now - start_time
+
+exit(1) unless runner.info[:success]
