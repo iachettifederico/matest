@@ -3,6 +3,13 @@
 
 Tests Gasoleros (Very cheap tests)
 
+# Stable
+
+Latest stable version: 1.6.6
+
+In version 1.6.7 the failure explanation is not working. 
+
+
 ## Description
 
 Matest is a very small testing library.
