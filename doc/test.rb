@@ -30,7 +30,7 @@ module Matest
         collection.select { |spec| spec.tag == @tag}
       end
     end
-    
+
     class ByFileAndLineNum
       attr_reader :file
       attr_reader :line
@@ -76,7 +76,7 @@ module Matest
 
     def initialize(order:    Matest::OrderStrategies::Random,
                    selector: Matest::SelectorStrategies::Focus,
-                   printer:  SpecPrinter.new,
+                   printer:  ExamplePrinter.new,
                    **options)
       @order    = Matest::OrderStrategies.strategy(order)
       @selector = Matest::SelectorStrategies.strategy(selector)
@@ -99,7 +99,7 @@ module Matest
     end
   end
 
-  class Spec
+  class Example
     def initialize(description=Undefined, tag: Undefined, focus: false, **options, &block)
       @_description = description
       @_block       = block
@@ -128,21 +128,18 @@ module Matest
       spec_class.new(description, &block).tap do |s|
         block = Callable(block, default: spec(description))
         s.instance_eval(&block)
-        # if block_given?
-        #   s.instance_eval(&block)
-        # else
-        #   spec(description)
-        # end
       end
     end
 
     def spec(description=Undefined, **options, &block)
       spec_class = self.class.const_set(spec_class_name, Class.new(self.class))
-      Matest.runner << spec_class.new(description, **options, &block)
+      spec_class.new(description, **options, &block).tap do |the_spec|
+        Matest.runner << the_spec
+      end
     end
 
     def execute!
-      SpecRunner.new(self).run
+      ExampleRunner.new(self).run
     end
 
     def skip
@@ -175,7 +172,7 @@ module Matest
 
   end
 
-  class SpecRunner
+  class ExampleRunner
     attr_reader :spec
     def initialize(spec)
       @spec = spec
@@ -187,21 +184,21 @@ module Matest
   end
 
   class Status
-    class SpecPassed < Status
+    class ExamplePassed < Status
       def passing?; true end
       def skipped?; false end
       def short; ?. end
       def name; "Passing" end
     end
 
-    class SpecFailed < Status
+    class ExampleFailed < Status
       def passing?; false end
       def skipped?; false end
       def short; ?F end
       def name; "Failed" end
     end
 
-    class SpecSkipped < Status
+    class ExampleSkipped < Status
       def passing?; false end
       def skipped?; true end
       def short; ?S end
@@ -233,9 +230,9 @@ module Matest
       end
     end
     STATUSES = {
-                true  => SpecPassed,
-                false => SpecFailed,
-                Skip  => SpecSkipped,
+                true  => ExamplePassed,
+                false => ExampleFailed,
+                Skip  => ExampleSkipped,
                }
     STATUSES.default = NotNaturalAssertion
 
@@ -270,7 +267,7 @@ module Matest
     def lets; spec.lets end
   end
 
-  class SpecPrinter
+  class ExamplePrinter
     STATUSES = []
     def <<(status)
       print status.short
@@ -306,7 +303,7 @@ end
 
 module Kernel
   def scope(description=Matest::Undefined, &block)
-    Matest::Spec.new(description, &block).tap do |s|
+    Matest::Example.new(description, &block).tap do |s|
       s.instance_eval(&block)
     end
   end
@@ -314,11 +311,11 @@ end
 
 
 
-Matest.runner order: :natural, selector: :all #Matest::SelectorStrategies::Tag.new(:wip)
+Matest.runner order: :natural, selector: :focus #Matest::SelectorStrategies::Tag.new(:wip)
 
 scope {
   let(:a) { 66 }
-  spec { @ba = 5; a }
+  spec(focus: true) { @ba = 5; a }
   spec(tag: :wip) {
     skip
     "WIP 1" }
@@ -343,53 +340,17 @@ scope {
 
 start = Time.now
 Matest.runner.run
-Time.now - start                # => 0.000490645
+Time.now - start                # => 8.8037e-05
 
 
-# >> NSNENENFENE.FE
+# >> N
 # >> Messages:
-# >> 
-# >> 
+# >>
+# >>
 # >> Not Natural:
 # >>   Result:    66
-# >>   Location:  -:321
+# >>   Location:  -:323
 # >>   Variables:
 # >>     ba: 5
 # >>   Lets:
 # >>     a: 66
-# >> Skipped:
-# >>   Result:    Matest::Status::Skip
-# >>   Location:  -:322
-# >> Not Natural:
-# >>   Result:    2
-# >>   Location:  -:325
-# >> Exception Raised:
-# >>   Result:    wrong argument type Class (expected Proc)
-# >>   Location:  -:345
-# >> Not Natural:
-# >>   Result:    WWIP 3
-# >>   Location:  -:327
-# >> Exception Raised:
-# >>   Result:    wrong argument type Class (expected Proc)
-# >>   Location:  -:345
-# >> Not Natural:
-# >>   Result:    Wip 4
-# >>   Location:  -:332
-# >> Failed:
-# >>   Result:    false
-# >>   Location:  -:333
-# >> Exception Raised:
-# >>   Result:    wrong argument type Class (expected Proc)
-# >>   Location:  -:345
-# >> Not Natural:
-# >>   Result:    6
-# >>   Location:  -:336
-# >> Exception Raised:
-# >>   Result:    wrong argument type Class (expected Proc)
-# >>   Location:  -:345
-# >> Failed:
-# >>   Result:    false
-# >>   Location:  -:339
-# >> Exception Raised:
-# >>   Result:    wrong argument type Class (expected Proc)
-# >>   Location:  -:345

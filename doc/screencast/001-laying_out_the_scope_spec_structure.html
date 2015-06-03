@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>001 - Laying out scope/spec structure</title>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
+<meta name="title" content="001 - Laying out scope/spec structure"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2015-06-01T18:59-0300"/>
+<meta name="author" content="Federico M. Iachetti"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style>
+<style>pre.src{color: #fff; background-color: #000;}</style>
+<script type="text/javascript" src="http://orgmode.org/org-info.js">
+/**
+ *
+ * @source: http://orgmode.org/org-info.js
+ *
+ * @licstart  The following is the entire license notice for the
+ *  JavaScript code in http://orgmode.org/org-info.js.
+ *
+ * Copyright (C) 2012-2013  Sebastian Rose
+ *
+ *
+ * The JavaScript code in this tag is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU
+ * General Public License (GNU GPL) as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option)
+ * any later version.  The code is distributed WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+ *
+ * As additional permission under GNU GPL version 3 section 7, you
+ * may distribute non-source (e.g., minimized or compacted) forms of
+ * that code without the copy of the GNU GPL normally required by
+ * section 4, provided you include this license notice and a URL
+ * through which recipients can access the Corresponding Source.
+ *
+ * @licend  The above is the entire license notice
+ * for the JavaScript code in http://orgmode.org/org-info.js.
+ *
+ */
+</script>
+
+<script type="text/javascript">
+
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+
+<!--/*--><![CDATA[/*><!--*/
+org_html_manager.set("TOC_DEPTH", "5");
+org_html_manager.set("LINK_HOME", "");
+org_html_manager.set("LINK_UP", "");
+org_html_manager.set("LOCAL_TOC", "1");
+org_html_manager.set("VIEW_BUTTONS", "0");
+org_html_manager.set("MOUSE_HINT", "underline");
+org_html_manager.set("FIXED_TOC", "0");
+org_html_manager.set("TOC", "1");
+org_html_manager.set("VIEW", "content");
+org_html_manager.setup();  // activate after the parameters are set
+/*]]>*///-->
+</script>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">001 - Laying out scope/spec structure</h1>
+
+
+
+<p>
+I'm going to start by laying down the basic structure for running our tests.
+</p>
+<p>
+Our target will be to get a nested structure for our tests into place (similar to the RSpec describe/it structure). 
+</p>
+<p>
+Each one of our tests will share some context with it's children, and each nested spec will be able to add to the context without leaking up the structure.
+</p>
+<p>
+To achieve this, we will design classes that share context using two strategies:
+</p>
+<ul>
+<li>Namespacing: each nested class will be literally nested inside the namespace of the wrapping class.
+</li>
+<li>Hierarchy: each nested class will be a subclass of the wrapping class.
+</li>
+</ul>
+
+
+<p>
+First, we will create the `Example` class, which will be the base for all specs:
+</p>
+
+
+
+<pre class="src src-ruby"><span style="color: #66B5FF;">module</span> <span style="color: #FFB774;">Matest</span>
+  <span style="color: #66B5FF;">class</span> <span style="color: #FFB774;">Example</span>
+  <span style="color: #66B5FF;">end</span>
+<span style="color: #66B5FF;">end</span>
+</pre>
+
+
+<p>
+Let's write our first test. We want to have a `scope` method on the Example object, which accepts a block and executes it.
+</p>
+
+
+
+<pre class="src src-ruby"><span style="color: #66B5FF;">module</span> <span style="color: #FFB774;">Matest</span>
+  describe <span style="color: #FFB774;">Example</span> <span style="color: #66B5FF;">do</span>
+    describe <span style="color: #A8FF60;">"#scope"</span> <span style="color: #66B5FF;">do</span>
+      it <span style="color: #A8FF60;">"executes the block"</span> <span style="color: #66B5FF;">do</span>
+        scp = <span style="color: #FFB774;">Example</span>.new.scope { <span style="color: #A8FF60;">"THE SCOPE CODE"</span> }
+        scp.should == <span style="color: #A8FF60;">"THE SCOPE CODE"</span>
+      <span style="color: #66B5FF;">end</span>
+    <span style="color: #66B5FF;">end</span>
+  <span style="color: #66B5FF;">end</span>
+<span style="color: #66B5FF;">end</span>
+</pre>
+
+
+<p>
+We can make this test pass by accepting a &amp;block argument and sending the `#call` method.
+</p>
+
+
+
+<pre class="src src-ruby"><span style="color: #66B5FF;">def</span> <span style="color: #FFB774;">scope</span>(&amp;block)
+  block.call
+<span style="color: #66B5FF;">end</span>
+</pre>
+
+
+<p>
+Next we want to lay down a Skipping mechanism. We will write a spec that asserts that a `Skip` will be returned if the block wasn't given
+</p>
+
+
+
+<pre class="src src-ruby">it <span style="color: #A8FF60;">"skips if no block was given"</span> <span style="color: #66B5FF;">do</span>
+  scp = <span style="color: #FFB774;">Example</span>.new.scope
+  scp.should == <span style="color: #FFB774;">Skip</span>
+<span style="color: #66B5FF;">end</span>
+</pre>
+
+
+<p>
+To make this pass we first need to return `Skip` if no block was given:
+</p>
+
+
+
+<pre class="src src-ruby"><span style="color: #66B5FF;">def</span> <span style="color: #FFB774;">scope</span>(&amp;block)
+  <span style="color: #66B5FF;">if</span> block_given?
+    block.call
+  <span style="color: #66B5FF;">else</span>
+    <span style="color: #FFB774;">Skip</span>
+  <span style="color: #66B5FF;">end</span>
+<span style="color: #66B5FF;">end</span>
+</pre>
+
+
+<p>
+This shows a new error "NameError: uninitialized constant Matest::Example::Skip". Which we can fix by defining a `Skip` class inside the `Matest` module
+</p>
+
+
+
+<pre class="src src-ruby"><span style="color: #66B5FF;">module</span> <span style="color: #FFB774;">Matest</span>
+  <span style="color: #66B5FF;">class</span> <span style="color: #FFB774;">Skip</span>; <span style="color: #66B5FF;">end</span>
+<span style="color: #66B5FF;">end</span>
+</pre>
+
+
+<p>
+And now we're green.
+</p>
+<p>
+You may have noticed I used `scp` as a variable name for scope. This is because in the near future we will introduce `scope` as a global method and we don't want to get confused.
+</p>
+<p>
+Now we want to introduce a second method, one that specifies the actual test. We will call this method `spec`. We'll add aliases for both this methods in the future, but for now, `spec` will do.
+</p>
+<p>
+To start, we'll define `spec` the same way as `scope` (in fact we will just copy, paste and change names):
+</p>
+
+
+
+<pre class="src src-ruby"><span style="color: #66B5FF;">module</span> <span style="color: #FFB774;">Matest</span>
+  describe <span style="color: #FFB774;">Example</span> <span style="color: #66B5FF;">do</span>
+    describe <span style="color: #A8FF60;">"#spec"</span> <span style="color: #66B5FF;">do</span>
+      it <span style="color: #A8FF60;">"executes the block"</span> <span style="color: #66B5FF;">do</span>
+        scp = <span style="color: #FFB774;">Example</span>.new.spec { <span style="color: #A8FF60;">"THE SPEC CODE"</span> }
+        scp.should == <span style="color: #A8FF60;">"THE SPEC CODE"</span>
+      <span style="color: #66B5FF;">end</span>
+
+      it <span style="color: #A8FF60;">"skips if no block was given"</span> <span style="color: #66B5FF;">do</span>
+        scp = <span style="color: #FFB774;">Example</span>.new.spec
+        scp.should == <span style="color: #FFB774;">Skip</span>
+      <span style="color: #66B5FF;">end</span>
+    <span style="color: #66B5FF;">end</span>
+  <span style="color: #66B5FF;">end</span>
+<span style="color: #66B5FF;">end</span>
+</pre>
+
+
+<p>
+And the same with the actual code: 
+</p>
+
+
+
+<pre class="src src-ruby"><span style="color: #66B5FF;">module</span> <span style="color: #FFB774;">Matest</span>
+  <span style="color: #66B5FF;">class</span> <span style="color: #FFB774;">Example</span>
+    <span style="color: #66B5FF;">def</span> <span style="color: #FFB774;">spec</span>(&amp;block)
+      <span style="color: #66B5FF;">if</span> block_given?
+        block.call
+      <span style="color: #66B5FF;">else</span>
+        <span style="color: #FFB774;">Skip</span>
+      <span style="color: #66B5FF;">end</span>
+    <span style="color: #66B5FF;">end</span>
+  <span style="color: #66B5FF;">end</span>
+<span style="color: #66B5FF;">end</span>
+</pre>
+
+
+<p>
+And our specs are passing. 
+</p>
+<p>
+Now that we have both methods created, let's do something a little more interesting. Let's try to call the `spec` method from inside the `scope` method. This is the kind of nesting we want on our test library.
+</p>
+
+
+
+<pre class="src src-ruby">describe <span style="color: #A8FF60;">"nesting"</span> <span style="color: #66B5FF;">do</span>
+  it <span style="color: #A8FF60;">"allows to call #spec from inside #scope"</span> <span style="color: #66B5FF;">do</span>
+    scp = <span style="color: #FFB774;">Example</span>.new.scope <span style="color: #66B5FF;">do</span>
+      spec
+    <span style="color: #66B5FF;">end</span>
+  <span style="color: #66B5FF;">end</span>
+<span style="color: #66B5FF;">end</span>
+</pre>
+
+
+<p>
+This raises an error: "undefined local variable or method `spec' for &hellip;"
+</p>
+<p>
+This means that `#spec` is not available on the current scope, which, at this point, is an instance of the `Example` class. To solve this problem, instead of calling the passed block, we need to `instance_eval` it on the instanced object (see `instance_eval` video).
+</p>
+
+
+
+<pre class="src src-ruby"><span style="color: #66B5FF;">def</span> <span style="color: #FFB774;">scope</span>(&amp;block)
+  <span style="color: #66B5FF;">if</span> block_given?
+    instance_eval(&amp;block)
+  <span style="color: #66B5FF;">else</span>
+    <span style="color: #FFB774;">Skip</span>
+  <span style="color: #66B5FF;">end</span>
+<span style="color: #66B5FF;">end</span>
+</pre>
+
+
+<p>
+We could make a second test calling `#scope` instead of `#spec`, but it won't give us any further information, and it will be one more test to mantain in the future.
+</p>
+<p>
+To end this episode, lets do a small refactoring. One of my rules for this project is "no `if`s" or, at least, put them in a place that doesn't get in the way. We currently have two instances of conditionals, both asserting if the block was given. To remove them we will use my `callable` gem (see video about callable).
+</p>
+<p>
+Lets do it one by one.
+</p>
+<p>
+The first conditional is: 
+</p>
+
+
+
+<pre class="src src-ruby"><span style="color: #66B5FF;">if</span> block_given?
+  instance_eval(&amp;block)
+<span style="color: #66B5FF;">else</span>
+  <span style="color: #FFB774;">Skip</span>
+<span style="color: #66B5FF;">end</span>
+</pre>
+
+
+<p>
+We can eliminate it by calling the `Callable` global method with a default value, like this
+</p>
+
+
+
+<pre class="src src-ruby">instance_eval(&amp;<span style="color: #FFB774;">Callable</span>(block, <span style="color: #99CC99;">default:</span> <span style="color: #FFB774;">Skip</span>))
+</pre>
+
+
+<p>
+This keeps the tests passing.
+</p>
+<p>
+We can get rid of the second conditional
+</p>
+
+
+
+<pre class="src src-ruby"><span style="color: #66B5FF;">if</span> block_given?
+  block.call
+<span style="color: #66B5FF;">else</span>
+  <span style="color: #FFB774;">Skip</span>
+<span style="color: #66B5FF;">end</span>
+</pre>
+
+
+<p>
+in a similar way
+</p>
+
+
+
+<pre class="src src-ruby"><span style="color: #FFB774;">Callable</span>(block, <span style="color: #99CC99;">default:</span> <span style="color: #FFB774;">Skip</span>).call
+</pre>
+
+
+<p>
+And with this, we are done.
+</p></div>
+
+</body>
+</html>

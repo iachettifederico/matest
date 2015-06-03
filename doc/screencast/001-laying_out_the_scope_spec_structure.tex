@@ -1,13 +1,36 @@
-#+TITLE:     001 - Laying out scope/spec structure
-#+AUTHOR:    Federico M. Iachetti
-#+EMAIL:     iachetti.federico@gmail.com
-#+LANGUAGE:  en
-#+OPTIONS:   H:5 num:nil toc:nil \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t
-#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
-#+INFOJS_OPT: view:content toc:t ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
-#+STYLE: <style>pre.src{color: #fff; background-color: #000;}</style>
-#+EXPORT_SELECT_TAGS: export
-#+EXPORT_EXCLUDE_TAGS: noexport
+% Created 2015-06-01 Mon 18:59
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fixltx2e}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{soul}
+\usepackage{textcomp}
+\usepackage{marvosym}
+\usepackage{wasysym}
+\usepackage{latexsym}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\tolerance=1000
+\providecommand{\alert}[1]{\textbf{#1}}
+
+\title{001 - Laying out scope/spec structure}
+\author{Federico M. Iachetti}
+\date{\today}
+\hypersetup{
+  pdfkeywords={},
+  pdfsubject={},
+  pdfcreator={Emacs Org-mode version 7.9.3f}}
+
+\begin{document}
+
+\maketitle
+
+
+
 
 I'm going to start by laying down the basic structure for running our tests.
 
@@ -17,21 +40,25 @@ Each one of our tests will share some context with it's children, and each neste
 
 To achieve this, we will design classes that share context using two strategies:
 
-- Namespacing: each nested class will be literally nested inside the namespace of the wrapping class.
-- Hierarchy: each nested class will be a subclass of the wrapping class.
+\begin{itemize}
+\item Namespacing: each nested class will be literally nested inside the namespace of the wrapping class.
+\item Hierarchy: each nested class will be a subclass of the wrapping class.
+\end{itemize}
 
 First, we will create the `Example` class, which will be the base for all specs:
 
-#+BEGIN_SRC ruby
+
+\begin{verbatim}
 module Matest
   class Example
   end
 end
-#+END_SRC
+\end{verbatim}
 
 Let's write our first test. We want to have a `scope` method on the Example object, which accepts a block and executes it.
 
-#+BEGIN_SRC ruby
+
+\begin{verbatim}
 module Matest
   describe Example do
     describe "#scope" do
@@ -42,28 +69,31 @@ module Matest
     end
   end
 end
-#+END_SRC
+\end{verbatim}
 
-We can make this test pass by accepting a &block argument and sending the `#call` method.
+We can make this test pass by accepting a \&block argument and sending the `\#call` method.
 
-#+BEGIN_SRC ruby
+
+\begin{verbatim}
 def scope(&block)
   block.call
 end
-#+END_SRC
+\end{verbatim}
 
 Next we want to lay down a Skipping mechanism. We will write a spec that asserts that a `Skip` will be returned if the block wasn't given
 
-#+BEGIN_SRC ruby
+
+\begin{verbatim}
 it "skips if no block was given" do
   scp = Example.new.scope
   scp.should == Skip
 end
-#+END_SRC
+\end{verbatim}
 
 To make this pass we first need to return `Skip` if no block was given:
 
-#+BEGIN_SRC ruby
+
+\begin{verbatim}
 def scope(&block)
   if block_given?
     block.call
@@ -71,15 +101,16 @@ def scope(&block)
     Skip
   end
 end
-#+END_SRC
+\end{verbatim}
 
-This shows a new error "NameError: uninitialized constant Matest::Example::Skip". Which we can fix by defining a `Skip` class inside the `Matest` module
+This shows a new error ``NameError: uninitialized constant Matest::Example::Skip''. Which we can fix by defining a `Skip` class inside the `Matest` module
 
-#+BEGIN_SRC ruby
+
+\begin{verbatim}
 module Matest
   class Skip; end
 end
-#+END_SRC
+\end{verbatim}
 
 And now we're green.
 
@@ -89,7 +120,8 @@ Now we want to introduce a second method, one that specifies the actual test. We
 
 To start, we'll define `spec` the same way as `scope` (in fact we will just copy, paste and change names):
 
-#+BEGIN_SRC ruby
+
+\begin{verbatim}
 module Matest
   describe Example do
     describe "#spec" do
@@ -105,11 +137,12 @@ module Matest
     end
   end
 end
-#+END_SRC
+\end{verbatim}
 
 And the same with the actual code: 
 
-#+BEGIN_SRC ruby
+
+\begin{verbatim}
 module Matest
   class Example
     def spec(&block)
@@ -121,13 +154,14 @@ module Matest
     end
   end
 end
-#+END_SRC
+\end{verbatim}
 
 And our specs are passing. 
 
 Now that we have both methods created, let's do something a little more interesting. Let's try to call the `spec` method from inside the `scope` method. This is the kind of nesting we want on our test library.
 
-#+BEGIN_SRC ruby
+
+\begin{verbatim}
 describe "nesting" do
   it "allows to call #spec from inside #scope" do
     scp = Example.new.scope do
@@ -135,13 +169,14 @@ describe "nesting" do
     end
   end
 end
-#+END_SRC
+\end{verbatim}
 
-This raises an error: "undefined local variable or method `spec' for ..."
+This raises an error: ``undefined local variable or method `spec' for \ldots{}''
 
-This means that `#spec` is not available on the current scope, which, at this point, is an instance of the `Example` class. To solve this problem, instead of calling the passed block, we need to `instance_eval` it on the instanced object (see `instance_eval` video).
+This means that `\#spec` is not available on the current scope, which, at this point, is an instance of the `Example` class. To solve this problem, instead of calling the passed block, we need to `instance\_{}eval` it on the instanced object (see `instance\_{}eval` video).
 
-#+BEGIN_SRC ruby
+
+\begin{verbatim}
 def scope(&block)
   if block_given?
     instance_eval(&block)
@@ -149,46 +184,52 @@ def scope(&block)
     Skip
   end
 end
-#+END_SRC
+\end{verbatim}
 
-We could make a second test calling `#scope` instead of `#spec`, but it won't give us any further information, and it will be one more test to mantain in the future.
+We could make a second test calling `\#scope` instead of `\#spec`, but it won't give us any further information, and it will be one more test to mantain in the future.
 
-To end this episode, lets do a small refactoring. One of my rules for this project is "no `if`s" or, at least, put them in a place that doesn't get in the way. We currently have two instances of conditionals, both asserting if the block was given. To remove them we will use my `callable` gem (see video about callable).
+To end this episode, lets do a small refactoring. One of my rules for this project is ``no `if`s'' or, at least, put them in a place that doesn't get in the way. We currently have two instances of conditionals, both asserting if the block was given. To remove them we will use my `callable` gem (see video about callable).
 
 Lets do it one by one.
 
 The first conditional is: 
 
-#+BEGIN_SRC ruby
+
+\begin{verbatim}
 if block_given?
   instance_eval(&block)
 else
   Skip
 end
-#+END_SRC
+\end{verbatim}
 
 We can eliminate it by calling the `Callable` global method with a default value, like this
 
-#+BEGIN_SRC ruby
+
+\begin{verbatim}
 instance_eval(&Callable(block, default: Skip))
-#+END_SRC
+\end{verbatim}
 
 This keeps the tests passing.
 
 We can get rid of the second conditional
 
-#+BEGIN_SRC ruby
+
+\begin{verbatim}
 if block_given?
   block.call
 else
   Skip
 end
-#+END_SRC
+\end{verbatim}
 
 in a similar way
 
-#+BEGIN_SRC ruby
+
+\begin{verbatim}
 Callable(block, default: Skip).call
-#+END_SRC
+\end{verbatim}
 
 And with this, we are done.
+
+\end{document}

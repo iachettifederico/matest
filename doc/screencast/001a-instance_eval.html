@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>001 a - Instance Eval</title>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
+<meta name="title" content="001 a - Instance Eval"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2015-06-02T13:48-0300"/>
+<meta name="author" content="Federico M. Iachetti"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style>
+<style>pre.src{color: #fff; background-color: #000;}code{background-color:#aaa; border-color: #bbb;}</style>
+<script type="text/javascript" src="http://orgmode.org/org-info.js">
+/**
+ *
+ * @source: http://orgmode.org/org-info.js
+ *
+ * @licstart  The following is the entire license notice for the
+ *  JavaScript code in http://orgmode.org/org-info.js.
+ *
+ * Copyright (C) 2012-2013  Sebastian Rose
+ *
+ *
+ * The JavaScript code in this tag is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU
+ * General Public License (GNU GPL) as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option)
+ * any later version.  The code is distributed WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+ *
+ * As additional permission under GNU GPL version 3 section 7, you
+ * may distribute non-source (e.g., minimized or compacted) forms of
+ * that code without the copy of the GNU GPL normally required by
+ * section 4, provided you include this license notice and a URL
+ * through which recipients can access the Corresponding Source.
+ *
+ * @licend  The above is the entire license notice
+ * for the JavaScript code in http://orgmode.org/org-info.js.
+ *
+ */
+</script>
+
+<script type="text/javascript">
+
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+
+<!--/*--><![CDATA[/*><!--*/
+org_html_manager.set("TOC_DEPTH", "5");
+org_html_manager.set("LINK_HOME", "");
+org_html_manager.set("LINK_UP", "");
+org_html_manager.set("LOCAL_TOC", "1");
+org_html_manager.set("VIEW_BUTTONS", "0");
+org_html_manager.set("MOUSE_HINT", "underline");
+org_html_manager.set("FIXED_TOC", "0");
+org_html_manager.set("TOC", "1");
+org_html_manager.set("VIEW", "content");
+org_html_manager.setup();  // activate after the parameters are set
+/*]]>*///-->
+</script>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">001 a - Instance Eval</h1>
+
+<p>If you've done some Ruby programming, you may know how to work with blocks. You know you can define a method that yields a value
+</p>
+
+
+
+<pre class="src src-ruby"><span style="color: #66B5FF;">def</span> <span style="color: #FFB774;">curly_print</span>(&amp;block)
+  puts <span style="color: #A8FF60;">"{{ "</span> + <span style="color: #66B5FF;">yield</span> + <span style="color: #A8FF60;">" }}"</span>
+<span style="color: #66B5FF;">end</span>
+
+curly_print { <span style="color: #A8FF60;">"superman"</span>.upcase }
+
+<span style="color: #7C7C7C;"># </span><span style="color: #7C7C7C;">&gt;&gt; {{ SUPERMAN }}</span>
+</pre>
+
+
+<p>
+or pass the block as the last parameter to the method and send it the <code>#call</code> method
+</p>
+
+
+
+<pre class="src src-ruby"><span style="color: #66B5FF;">def</span> <span style="color: #FFB774;">curly_print</span>(&amp;block)
+  puts <span style="color: #A8FF60;">"{{ "</span> + block.call + <span style="color: #A8FF60;">" }}"</span>
+<span style="color: #66B5FF;">end</span>
+
+curly_print { <span style="color: #A8FF60;">"batman"</span> }
+
+<span style="color: #7C7C7C;"># </span><span style="color: #7C7C7C;">&gt;&gt; {{ BATMAN }}</span>
+</pre>
+
+
+<p>
+You also probably know that the scope of the block is the context from which it was called. So if, for example, we defined our method on a module
+</p>
+
+
+
+<pre class="src src-ruby"><span style="color: #66B5FF;">module</span> <span style="color: #FFB774;">WeirdPrinter</span>
+  <span style="color: #66B5FF;">def</span> <span style="color: #FFB774;">self.curly_print</span>(&amp;block)
+    puts <span style="color: #A8FF60;">"{{ "</span> + block.call + <span style="color: #A8FF60;">" }}"</span>
+  <span style="color: #66B5FF;">end</span>
+<span style="color: #66B5FF;">end</span>
+</pre>
+
+
+<p>
+and we define a variable in our current scope, you can use it inside that block.
+</p>
+
+
+
+<pre class="src src-ruby">superhero = <span style="color: #A8FF60;">"wonder woman"</span>
+<span style="color: #FFB774;">WeirdPrinter</span>.curly_print { superhero }
+
+<span style="color: #7C7C7C;"># </span><span style="color: #7C7C7C;">&gt;&gt; {{ WONDER WOMAN }}</span>
+</pre>
+
+
+<p>
+Finally, yo may have passed a parameter to the block.
+</p>
+
+
+
+<pre class="src src-ruby"><span style="color: #66B5FF;">module</span> <span style="color: #FFB774;">WeirdPrinter</span>
+  <span style="color: #66B5FF;">def</span> <span style="color: #FFB774;">self.curly_print</span>(name, &amp;block)
+    puts <span style="color: #A8FF60;">"{{ "</span> + block.call(name) + <span style="color: #A8FF60;">" }}"</span>
+  <span style="color: #66B5FF;">end</span>
+<span style="color: #66B5FF;">end</span>
+
+<span style="color: #FFB774;">WeirdPrinter</span>.curly_print(<span style="color: #A8FF60;">"aquaman"</span>) { |superhero|
+  superhero.upcase
+}
+
+<span style="color: #7C7C7C;"># </span><span style="color: #7C7C7C;">&gt;&gt; {{ AQUAMAN }}</span>
+</pre>
+
+
+<p>
+With all of this in mind, let's put blocks to a good use. 
+</p>
+<p>
+In almost every kind of project there's a need for configuration of some kind. So let's create a basic configuration class for a printer. We want to set the values for several attributes, and we want to do it using a simple DSL.
+</p>
+<p>
+Here is the skeleton of our printer
+</p>
+
+
+
+<pre class="src src-ruby"><span style="color: #66B5FF;">class</span> <span style="color: #FFB774;">Printer</span>
+  <span style="color: #66B5FF;">def</span> <span style="color: #FFB774;">paper_size</span>(size=<span style="color: #99CC99;">:not_set</span>)
+    <span style="color: #C6C5FE;">@paper_size</span> = size <span style="color: #66B5FF;">unless</span> orientation == <span style="color: #99CC99;">:not_set</span>
+    <span style="color: #C6C5FE;">@paper_size</span>
+  <span style="color: #66B5FF;">end</span>
+
+  <span style="color: #66B5FF;">def</span> <span style="color: #FFB774;">paper_orientation</span>(orientation=<span style="color: #99CC99;">:not_set</span>)
+    <span style="color: #C6C5FE;">@orientation</span> = orientation <span style="color: #66B5FF;">unless</span> orientation == <span style="color: #99CC99;">:not_set</span>
+    <span style="color: #C6C5FE;">@orientation</span>
+  <span style="color: #66B5FF;">end</span>
+
+  <span style="color: #66B5FF;">def</span> <span style="color: #FFB774;">use_color</span>
+    <span style="color: #C6C5FE;">@color</span> = <span style="color: #C6C5FE;">true</span>
+  <span style="color: #66B5FF;">end</span>
+
+  <span style="color: #66B5FF;">def</span> <span style="color: #FFB774;">black_and_white</span>
+    <span style="color: #C6C5FE;">@color</span> = <span style="color: #C6C5FE;">false</span>
+  <span style="color: #66B5FF;">end</span>
+
+  <span style="color: #66B5FF;">def</span> <span style="color: #FFB774;">color</span>
+    <span style="color: #C6C5FE;">@color</span> ||= <span style="color: #C6C5FE;">false</span>
+  <span style="color: #66B5FF;">end</span>
+<span style="color: #66B5FF;">end</span>
+</pre>
+
+
+<p>
+Which has setter and getter methods for the attributes we need. They are intentionally set as both getter and setter to make them easier on the eyes when using our DSL.
+</p>
+<p>
+And here's a brief example of how to use it
+</p>
+
+
+
+<pre class="src src-ruby">printer = <span style="color: #FFB774;">Printer</span>.new
+
+printer.paper_size(<span style="color: #99CC99;">:a4</span>)
+printer.paper_size              <span style="color: #7C7C7C;"># </span><span style="color: #7C7C7C;">=&gt; :a4</span>
+
+printer.use_color
+printer.color                   <span style="color: #7C7C7C;"># </span><span style="color: #7C7C7C;">=&gt; true</span>
+</pre>
+
+
+<p>
+Now, lets write an initializer that receives a block.
+</p>
+<p>
+Our first instinct, given our knowledge about blocks, is to pass the printer instance as a parameter to the block. So lets follow our instinct and see where it leads us.
+</p>
+
+
+
+<pre class="src src-ruby"> <span style="color: #66B5FF;">def</span> <span style="color: #FFB774;">self.configure</span>(&amp;block)
+    printer = <span style="color: #FFB774;">Printer</span>.new
+    block.call(printer)
+    printer
+  <span style="color: #66B5FF;">end</span>
+<span style="color: #66B5FF;">end</span>
+</pre>
+
+
+<p>
+And the usage example would be like
+</p>
+
+
+
+<pre class="src src-ruby">printer = <span style="color: #FFB774;">Printer</span>.configure <span style="color: #66B5FF;">do</span> |config|
+  config.paper_size <span style="color: #99CC99;">:a4</span>
+  config.paper_orientation <span style="color: #99CC99;">:landscape</span>
+  config.use_color
+<span style="color: #66B5FF;">end</span>
+
+printer.paper_size              <span style="color: #7C7C7C;"># </span><span style="color: #7C7C7C;">=&gt; :a4</span>
+printer.color                   <span style="color: #7C7C7C;"># </span><span style="color: #7C7C7C;">=&gt; true</span>
+printer.paper_orientation       <span style="color: #7C7C7C;"># </span><span style="color: #7C7C7C;">=&gt; :landscape</span>
+</pre>
+
+
+<p>
+This looks nice, but wouldn't you like to get rid of all those <code>config.</code> statements? 
+</p>
+<p>
+Well, you're in luck. As a matter of fact, <code>instance_eval</code> is our solution.
+</p>
+<p>
+We need to call <code>instance_eval</code> on the newly created printer to set the scope to that object and pass the block as an argument, prefixed with a <code>&amp;</code>. The <code>&amp;</code> passes the argument as a block instead of a regular lambda.
+</p>
+
+
+
+<pre class="src src-ruby"><span style="color: #66B5FF;">class</span> <span style="color: #FFB774;">Printer</span>
+  <span style="color: #66B5FF;">def</span> <span style="color: #FFB774;">self.configure</span>(&amp;block)
+    printer = <span style="color: #FFB774;">Printer</span>.new
+
+    printer.instance_eval(&amp;block)
+
+    printer
+  <span style="color: #66B5FF;">end</span>
+<span style="color: #66B5FF;">end</span>
+</pre>
+
+
+<p>
+And now, finally, we can create our new printer object with our new DSL
+</p>
+
+
+
+<pre class="src src-ruby">printer = <span style="color: #FFB774;">Printer</span>.configure <span style="color: #66B5FF;">do</span> |config|
+  paper_size <span style="color: #99CC99;">:a4</span>
+  paper_orientation <span style="color: #99CC99;">:landscape</span>
+  use_color
+<span style="color: #66B5FF;">end</span>
+
+printer.paper_size              <span style="color: #7C7C7C;"># </span><span style="color: #7C7C7C;">=&gt; :a4</span>
+printer.color                   <span style="color: #7C7C7C;"># </span><span style="color: #7C7C7C;">=&gt; true</span>
+printer.paper_orientation       <span style="color: #7C7C7C;"># </span><span style="color: #7C7C7C;">=&gt; :landscape</span>
+</pre>
+
+
+<p>
+One last note before we wrap up. 
+</p>
+<p>
+I said that the getter/setter syntax was chosen to make the DSL "prettier" (which it does), but that's not the only reason.
+</p>
+<p>
+There's a situation in which instance_eval won't work as you would expect (It's bitten me quite a few times).
+</p>
+<p>
+If you decide to declare a setter method as the ones <code>attr_writer</code> provides
+</p>
+
+
+
+<pre class="src src-ruby"><span style="color: #66B5FF;">class</span> <span style="color: #FFB774;">Printer</span>
+  <span style="color: #66B5FF;">def</span> <span style="color: #FFB774;">paper_size=</span>(value)
+    <span style="color: #C6C5FE;">@paper_size</span> = value
+  <span style="color: #66B5FF;">end</span>
+<span style="color: #66B5FF;">end</span>
+</pre>
+
+
+<p>
+and you then try to call it from inside the block
+</p>
+
+
+
+<pre class="src src-ruby">printer = <span style="color: #FFB774;">Printer</span>.configure <span style="color: #66B5FF;">do</span> |config|
+  paper_size = <span style="color: #99CC99;">:a4</span>
+<span style="color: #66B5FF;">end</span>
+</pre>
+
+
+<p>
+You don't get the expected behaviour
+</p>
+
+
+
+<pre class="src src-ruby">printer.paper_size
+<span style="color: #7C7C7C;"># </span><span style="color: #7C7C7C;">=&gt; nil</span>
+</pre>
+
+
+<p>
+And that's because a <code>var = value</code> expression will always create a local variable, because in Ruby the local scope gets the priority.
+</p>
+<p>
+It's a very subtle error that is very common and very difficult to debug if you don't know all the facts.
+</p>
+</div>
+
+</body>
+</html>

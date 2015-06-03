@@ -1,0 +1,210 @@
+#+TITLE:     001 a - Instance Eval
+#+AUTHOR:    Federico M. Iachetti
+#+EMAIL:     iachetti.federico@gmail.com
+#+LANGUAGE:  en
+#+OPTIONS:   H:5 num:nil toc:nil \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:content toc:t ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+STYLE: <style>pre.src{color: #fff; background-color: #000;}code{background-color:#aaa; border-color: #bbb;}</style>
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+
+If you've done some Ruby programming, you may know how to work with blocks. You know you can define a method that yields a value
+
+#+BEGIN_SRC ruby
+def curly_print(&block)
+  puts "{{ " + yield + " }}"
+end
+
+curly_print { "superman".upcase }
+
+# >> {{ SUPERMAN }}
+#+END_SRC
+
+or pass the block as the last parameter to the method and send it the =#call= method
+
+#+BEGIN_SRC ruby
+def curly_print(&block)
+  puts "{{ " + block.call + " }}"
+end
+
+curly_print { "batman" }
+
+# >> {{ BATMAN }}
+#+END_SRC
+
+You also probably know that the scope of the block is the context from which it was called. So if, for example, we defined our method on a module
+
+#+BEGIN_SRC ruby
+module WeirdPrinter
+  def self.curly_print(&block)
+    puts "{{ " + block.call + " }}"
+  end
+end
+#+END_SRC
+
+and we define a variable in our current scope, you can use it inside that block.
+
+#+BEGIN_SRC ruby
+superhero = "wonder woman"
+WeirdPrinter.curly_print { superhero }
+
+# >> {{ WONDER WOMAN }}
+#+END_SRC
+
+Finally, yo may have passed a parameter to the block.
+
+#+BEGIN_SRC ruby
+module WeirdPrinter
+  def self.curly_print(name, &block)
+    puts "{{ " + block.call(name) + " }}"
+  end
+end
+
+WeirdPrinter.curly_print("aquaman") { |superhero|
+  superhero.upcase
+}
+
+# >> {{ AQUAMAN }}
+#+END_SRC
+
+With all of this in mind, let's put blocks to a good use. 
+
+In almost every kind of project there's a need for configuration of some kind. So let's create a basic configuration class for a printer. We want to set the values for several attributes, and we want to do it using a simple DSL.
+
+Here is the skeleton of our printer
+
+#+BEGIN_SRC ruby
+class Printer
+  def paper_size(size=:not_set)
+    @paper_size = size unless orientation == :not_set
+    @paper_size
+  end
+
+  def paper_orientation(orientation=:not_set)
+    @orientation = orientation unless orientation == :not_set
+    @orientation
+  end
+
+  def use_color
+    @color = true
+  end
+
+  def black_and_white
+    @color = false
+  end
+
+  def color
+    @color ||= false
+  end
+end
+#+END_SRC
+
+Which has setter and getter methods for the attributes we need. They are intentionally set as both getter and setter to make them easier on the eyes when using our DSL.
+
+And here's a brief example of how to use it
+
+#+BEGIN_SRC ruby
+printer = Printer.new
+
+printer.paper_size(:a4)
+printer.paper_size              # => :a4
+
+printer.use_color
+printer.color                   # => true
+#+END_SRC
+
+Now, lets write an initializer that receives a block.
+
+Our first instinct, given our knowledge about blocks, is to pass the printer instance as a parameter to the block. So lets follow our instinct and see where it leads us.
+
+#+BEGIN_SRC ruby
+ def self.configure(&block)
+    printer = Printer.new
+    block.call(printer)
+    printer
+  end
+end
+#+END_SRC
+
+And the usage example would be like
+
+#+BEGIN_SRC ruby
+printer = Printer.configure do |config|
+  config.paper_size :a4
+  config.paper_orientation :landscape
+  config.use_color
+end
+
+printer.paper_size              # => :a4
+printer.color                   # => true
+printer.paper_orientation       # => :landscape
+#+END_SRC
+
+This looks nice, but wouldn't you like to get rid of all those =config.= statements? 
+
+Well, you're in luck. As a matter of fact, =instance_eval= is our solution.
+
+We need to call =instance_eval= on the newly created printer to set the scope to that object and pass the block as an argument, prefixed with a =&=. The =&= passes the argument as a block instead of a regular lambda.
+
+#+BEGIN_SRC ruby
+class Printer
+  def self.configure(&block)
+    printer = Printer.new
+
+    printer.instance_eval(&block)
+
+    printer
+  end
+end
+#+END_SRC
+
+And now, finally, we can create our new printer object with our new DSL
+
+#+BEGIN_SRC ruby
+printer = Printer.configure do |config|
+  paper_size :a4
+  paper_orientation :landscape
+  use_color
+end
+
+printer.paper_size              # => :a4
+printer.color                   # => true
+printer.paper_orientation       # => :landscape
+#+END_SRC
+
+One last note before we wrap up. 
+
+I said that the getter/setter syntax was chosen to make the DSL "prettier" (which it does), but that's not the only reason.
+
+There's a situation in which instance_eval won't work as you would expect (It's bitten me quite a few times).
+
+If you decide to declare a setter method as the ones =attr_writer= provides
+
+#+BEGIN_SRC ruby
+class Printer
+  def paper_size=(value)
+    @paper_size = value
+  end
+end
+#+END_SRC
+
+and you then try to call it from inside the block
+
+#+BEGIN_SRC ruby
+printer = Printer.configure do |config|
+  paper_size = :a4
+end
+#+END_SRC
+
+You don't get the expected behaviour
+
+#+BEGIN_SRC ruby
+printer.paper_size
+# => nil
+#+END_SRC
+
+And that's because a =var = value= expression will always create a local variable, because in Ruby the local scope gets the priority.
+
+It's a very subtle error that is very common and very difficult to debug if you don't know all the facts.
+
