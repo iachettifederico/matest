@@ -1,0 +1,102 @@
+#+TITLE:     001 b - Callable
+#+AUTHOR:    Federico M. Iachetti
+#+EMAIL:     iachetti.federico@gmail.com
+#+LANGUAGE:  en
+#+OPTIONS:   H:5 num:nil toc:nil \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:content toc:t ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+STYLE: <style>pre.src{color: #fff; background-color: #000;}</style>
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+
+Usage
+
+To use this library, you first need to require it. That's all the setup you need.
+
+require "callable"
+
+If you need to return a callable object for some reason, you can do it by invoking the callable method:
+
+  c = Callable( :ret_val )
+  c.call
+  # => ret_val
+Take into account that if you pass a callable object (such as a lambda), you'll get it back as the return value:
+
+  c = Callable( ->{ :ret_val } )
+  c.call
+  # => ret_val
+  c
+  # => #<Proc:0x0000000261e138@-:6 (lambda)>
+The gem also ships with a #callable? method that returns true if the object is callable and false if it's not.
+
+  :not_callable.callable?
+  => false
+
+  ->{ :not_callable }.callable?
+  => true
+This is the same as saying
+
+  xxx.respond_to? :call
+But I felt it would be more illustrative of its purpose.
+
+Default value
+
+If you don't like to deal with nils, callable ships with a default option for when Callable wraps nil.
+
+  Callable(nil).call
+  # => nil
+
+  Callable(nil, default: "I'm not 'nil' anymore!").call
+  # => "I'm not 'nil' anymore!"
+Where to use it?
+
+I think the main use for this library is handling actions as options.
+
+For example, imagine we have a very reduced authorization library that provides a method called do_if. This method receives:
+
+a symbol representing a permission name
+a Hash that represents the available authorization policies
+a block with the actions to perform
+The premise is that the method will execute the block if the selected policy returns true when we send the call message.
+
+Our first approach is:
+
+  def do_if(permission, policies=POLICIES)
+    yield if policies[permission].call
+  end
+So, if our POLICIES hash is:
+
+  POLICIES = {
+    development: -> { true }
+  }
+
+  do_if(:development) do
+    puts "Debugging"
+  end
+
+  # >> Debugging
+And if we switch the policy value:
+
+  POLICIES = {
+    development: -> { false }
+  }
+
+  do_if(:development) do
+    puts "Debugging"
+  end
+
+  # >> 
+This allows us to have a lot of flexibility. But we could provide the user a way to say the same with a little less code.
+
+If we wrap the policy to call with the Callable method:
+
+  def do_if(permission, policies=POLICIES)
+    yield if Callable(policies[permission]).call
+  end
+Now we can put the raw value we want to get back without the need of the lambda
+
+  POLICIES = {
+    development: true
+  }
+Even though using a lambda adds just a few more characters, in my opinion, it clutters the code. By being able to leave it out, the code reads much better.
+
