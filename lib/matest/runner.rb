@@ -24,8 +24,8 @@ module Matest
       if location.count == 1
         require(file)
       else
-        require_spec(*location)
-      end
+        require_spec(*location)      end
+
     end
 
     def execute!
