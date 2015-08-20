@@ -96,7 +96,7 @@ module Matest
   The assertion couldn't be explained.
   The error message was:
     #{result}
-  Make sure you are not calling any local vaiables on your code assertion.
+  Make sure you are not calling any local variables on your code assertion.
       CODE
         puts error(code)
         false
