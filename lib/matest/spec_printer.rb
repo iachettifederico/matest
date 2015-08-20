@@ -81,12 +81,14 @@ module Matest
       end
     end
 
-    def print_subexpression(code, status)
-      just_before_assertion = status.example.just_before_assertion
-      result = Evaluator.new(just_before_assertion, just_before_assertion.before_assertion_block).eval_string(code)
+    def print_subexpression(subexpression, status)
+      just_before_assertion = status.example.just_before_assertion.code
+      code = just_before_assertion + subexpression
+      
+      result = Evaluator.new(just_before_assertion, proc{}).eval_string(code)
       if result.class != Matest::EvalErr
         explanation = []
-        explanation << expression("  #{code}")
+        explanation << expression("  #{subexpression}")
         explanation << "\n"
         explanation << value("    # => #{result}")
         puts explanation.join
@@ -96,7 +98,6 @@ module Matest
   The assertion couldn't be explained.
   The error message was:
     #{result}
-  Make sure you are not calling any local variables on your code assertion.
       CODE
         puts error(code)
         false

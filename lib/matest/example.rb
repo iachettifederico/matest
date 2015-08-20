@@ -1,5 +1,6 @@
 module Matest
   class Example
+    attr_reader :code
     def initialize(example_block, description, lets)
       @example_block__for_internal_use = ExampleBlock.new(example_block)
       @description__for_internal_use = description
