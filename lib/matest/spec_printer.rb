@@ -82,10 +82,12 @@ module Matest
     end
 
     def print_subexpression(subexpression, status)
-      just_before_assertion = status.example.just_before_assertion.code
-      code = just_before_assertion + subexpression
-      
-      result = Evaluator.new(just_before_assertion, proc{}).eval_string(code)
+      just_before_assertion = status.example.just_before_assertion
+      code = just_before_assertion.code + subexpression
+
+      result = Evaluator.new(just_before_assertion, just_before_assertion.before_assertion_block).eval_string(code)
+
+      #result = Evaluator.new(just_before_assertion, proc{}).eval_string(code)
       if result.class != Matest::EvalErr
         explanation = []
         explanation << expression("  #{subexpression}")
