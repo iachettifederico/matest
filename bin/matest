@@ -13,6 +13,7 @@ end
 
 require "matest"
 require "rake"
+require "pathname"
 
 pwd = Dir.pwd
 runner = Matest::Runner.runner
