@@ -3,7 +3,7 @@ task :spec do
   if arg_files
     arg_files.map! { |file_name|
       path = Pathname(file_name.to_s).expand_path
-      unless Pathname(file_name.to_s.split(":").first).exist?
+      unless Pathname(file_name.to_s.split(":").first.to_s).exist?
         raise "Spec file not found: #{file_name.inspect}"
       end
       path.directory? ? path.to_s + "/**/*.rb" : path.to_s
