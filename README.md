@@ -48,7 +48,7 @@ end
 
 If the return value of the `spec` block is `true`, the spec will pass and if it's `false` it will fail.
 
-If you return anithing else, you'll get a `NOT A NATURAL ASSERTION` status.
+If you return anything else, you'll get a `NOT A NATURAL ASSERTION` status.
 
 You can also add descriptions to either the `scope` or the `spec` blocks:
 
@@ -62,25 +62,25 @@ end
 
 ## Constraints
 
-A couple of constraints must b taken into account, and this is extremely important.
+A couple of constraints must be taken into account, and this is extremely important.
 
 ### The assertion MUST return a boolean
 
-The assertion is the last statement of the block and it must return either true or false.
-This is important, because the assertion will be evaluated and it will provide the status o the test.
+The assertion is the last statement of the block and it must return either `true` or `false`.
+This is important because the assertion will be evaluated and it will provide the status of the test.
 
 ### Assertion expression
 
 The assertion can be any expression that returns a boolean value, BUT IT CANNOT CONTAIN LOCAL VARIABLES.
-If the assertion contains a local variable and it fails, the code that explains it bit by bit will throw an error.
+If the assertion contains a local variable and fails, the code that explains it bit by bit will throw an error.
 
 ## Raising Errors
 
-If your test raises an error during the run, youll get an `ERROR` status and you'll see the backtrace.
+If your test raises an error during the run, you'll get an `ERROR` status and you'll see the backtrace.
 
 ## Skipping
 
-You can skip a test in two possible ways: You can declare a spec whithout a block or use the `xspec` method.
+You can skip a test in two possible ways: You can declare a spec without a block or use the `xspec` method.
 
 ```ruby
 scope do
@@ -91,9 +91,9 @@ scope do
 end
 ```
 
-This will skip you spec and inform you when you run.
+This will skip your spec and inform you when you run.
 
-You can skip the whole scope  by using `xscope` instead of `scope`.
+You can skip the whole scope by using `xscope` instead of `scope`.
 
 Take into account that `xscope` is a no-op so you won't be informed when you skip a scope.
 
@@ -101,7 +101,7 @@ Take into account that `xscope` is a no-op so you won't be informed when you ski
 
 Matest steals the `let` and `let!` features from `RSpec` and `Minitest`.
 
-With `let` you can declare a lazy variable valid on the current scope and all sub-scopes. `let!` has the same efect, but it won't be lazy (it wil be loaded when defined).
+With `let` you can declare a lazy variable valid on the current scope and all sub-scopes. `let!` has the same effect, but it won't be lazy (it will be loaded when defined).
 
 Here are some examples of what you can do with them:
 
@@ -214,7 +214,7 @@ end
 
 ## Aliases
 
-You may be used to other keywords provenient from different testing frameworks. Matest has a couple of alias that you may use indistinctly to fit your style.
+You may be used to other keywords provenient from different testing frameworks. Matest has a couple of aliases that you may use indistinctly to fit your style.
 
 `scope` has the following aliases:
 - `context` (and `xcontext`)
@@ -253,7 +253,7 @@ end
 - matest-given-ish
 - Allow seamless transition (separated gems)
   * matest-assert (to move from TestUnit, Minitest::Unit, Cutest)
-  * matest-should (to move from RSpec
+  * matest-should (to move from RSpec)
   * matest-must (to move from Minitest::Spec)
 - Run "<file>:<line>"
   Should run the enclosing test or scope
